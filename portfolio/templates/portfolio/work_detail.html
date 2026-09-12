@@ -1,0 +1,112 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} — {{ profile.name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-5 col-12 mb-5">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'portfolio:work_list' %}">Work</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                        </ol>
+                    </nav>
+                    <h2 class="text-white">{{ project.title }}</h2>
+
+                    <div class="d-flex align-items-center mt-5">
+                        <a href="#project-detail" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+                        {% if project.project_url %}
+                            <a href="{{ project.project_url }}" target="_blank" rel="noopener" class="custom-icon bi-box-arrow-up-right"></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-5 col-12">
+                    <div class="topics-detail-block bg-white shadow-lg">
+                        {% if project.cover_image %}
+                            <img src="{{ project.cover_image.url }}" class="topics-detail-block-image img-fluid" alt="{{ project.title }}">
+                        {% else %}
+                            <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="topics-detail-block-image img-fluid" alt="{{ project.title }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <section class="topics-detail-section section-padding" id="project-detail">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12 m-auto">
+                    {% if project.client or project.tags.all %}
+                        <p>
+                            {% if project.client %}<strong>Client:</strong> {{ project.client }}{% endif %}
+                        </p>
+                    {% endif %}
+
+                    {% if project.short_description %}<p class="lead">{{ project.short_description }}</p>{% endif %}
+
+                    {{ project.content|linebreaks }}
+
+                    {% if project.images.all %}
+                        <div class="row my-4">
+                            {% for img in project.images.all %}
+                                <div class="col-lg-6 col-md-6 col-12 mb-4">
+                                    <img src="{{ img.image.url }}" class="topics-detail-block-image img-fluid" alt="{{ img.caption }}">
+                                    {% if img.caption %}<p class="text-center mt-2">{{ img.caption }}</p>{% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if project.tags.all %}
+                        <div class="mt-4">
+                            {% for tag in project.tags.all %}
+                                <span class="badge bg-design rounded-pill me-1">{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% if related_projects %}
+    <section class="section-padding section-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-12">
+                    <h3 class="mb-4">Related Projects</h3>
+                </div>
+                {% for rp in related_projects %}
+                    <div class="col-lg-4 col-md-6 col-12 mt-3">
+                        <div class="custom-block bg-white shadow-lg">
+                            <a href="{{ rp.get_absolute_url }}">
+                                <div class="d-flex">
+                                    <div>
+                                        <h5 class="mb-2">{{ rp.title }}</h5>
+                                        <p class="mb-0">{{ rp.short_description|truncatewords:14 }}</p>
+                                    </div>
+                                </div>
+                                {% if rp.cover_image %}
+                                    <img src="{{ rp.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ rp.title }}">
+                                {% else %}
+                                    <img src="{% static 'portfolio/images/topics/undraw_Redesign_feedback_re_jvm0.png' %}" class="custom-block-image img-fluid" alt="{{ rp.title }}">
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'portfolio/base.html' %}
+{% load static portfolio_extras %}
+
+{% block title %}Blog — {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block body_class %}topics-listing-page{% endblock %}
+
+{% block content %}
+
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                        </ol>
+                    </nav>
+                    <h2 class="text-white">Blog</h2>
+                </div>
+
+                <div class="col-lg-5 col-12 ms-auto">
+                    <form method="get" class="custom-form" role="search">
+                        <div class="input-group">
+                            <span class="input-group-text bi-search"></span>
+                            <input name="keyword" type="search" class="form-control" value="{{ keyword }}" placeholder="Search posts ..." aria-label="Search">
+                            <button type="submit" class="form-control">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-12 mb-4">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link {% if not active_category %}active{% endif %}" href="{% url 'portfolio:blog_list' %}{% if keyword %}?keyword={{ keyword }}{% endif %}">All</a>
+                        </li>
+                        {% for value, label in categories %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_category == value %}active{% endif %}" href="?category={{ value }}{% if keyword %}&keyword={{ keyword }}{% endif %}">{{ label }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-lg-8 col-12 mt-3 mx-auto">
+                    {% if keyword %}
+                        <p class="mb-4">Search results for "<strong>{{ keyword }}</strong>" &mdash; {{ page_obj.paginator.count }} post{{ page_obj.paginator.count|pluralize }} found.</p>
+                    {% endif %}
+
+                    {% for post in posts %}
+                        <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                            <div class="d-flex">
+                                {% if post.cover_image %}
+                                    <img src="{{ post.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ post.title }}">
+                                {% else %}
+                                    <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="custom-block-image img-fluid" alt="{{ post.title }}">
+                                {% endif %}
+
+                                <div class="custom-block-topics-listing-info d-flex">
+                                    <div>
+                                        <h5 class="mb-2">{{ post.title }}</h5>
+                                        <p class="mb-0">{{ post.excerpt|default:post.content|truncatewords:22 }}</p>
+                                        <a href="{{ post.get_absolute_url }}" class="btn custom-btn mt-3 mt-lg-4">Read More</a>
+                                    </div>
+                                    <span class="badge {{ post.category|category_badge_class }} rounded-pill ms-auto">{{ post.get_category_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center">No posts found — try a different search, or add posts from the Django admin panel.</p>
+                    {% endfor %}
+
+                    {% if page_obj.paginator.num_pages > 1 %}
+                        <nav aria-label="Blog pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if keyword %}&keyword={{ keyword }}{% endif %}{% if active_category %}&category={{ active_category }}{% endif %}">Previous</a></li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if keyword %}&keyword={{ keyword }}{% endif %}{% if active_category %}&category={{ active_category }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if keyword %}&keyword={{ keyword }}{% endif %}{% if active_category %}&category={{ active_category }}{% endif %}">Next</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
