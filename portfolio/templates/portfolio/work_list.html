@@ -1,79 +1,80 @@
 {% extends 'portfolio/base.html' %}
 {% load static %}
 
-{% block title %}Work — {{ profile.name|default:"Portfolio" }}{% endblock %}
-{% block body_class %}topics-listing-page{% endblock %}
+{% block title %}Work &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
 
 {% block content %}
 
-    <header class="site-header d-flex flex-column justify-content-center align-items-center">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5 col-12">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Work</li>
-                        </ol>
-                    </nav>
-                    <h2 class="text-white">My Work</h2>
-                </div>
-            </div>
+  <section class="page-hero" aria-labelledby="page-title">
+    <div class="container">
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Work</li></ol>
+      <div class="page-hero-grid">
+        <div>
+          <h1 id="page-title">Work<span class="text-tomato">.</span></h1>
+          <p class="lead-text">Case studies and projects, open any one for the full write-up.</p>
         </div>
-    </header>
-
-
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-12 text-center">
-                    <h3 class="mb-4">Projects</h3>
-                </div>
-
-                <div class="col-lg-8 col-12 mt-3 mx-auto">
-                    {% for project in projects %}
-                        <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
-                            <div class="d-flex">
-                                {% if project.cover_image %}
-                                    <img src="{{ project.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ project.title }}">
-                                {% else %}
-                                    <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="custom-block-image img-fluid" alt="{{ project.title }}">
-                                {% endif %}
-
-                                <div class="custom-block-topics-listing-info d-flex">
-                                    <div>
-                                        <h5 class="mb-2">{{ project.title }}</h5>
-                                        <p class="mb-0">{{ project.short_description|default:project.content|truncatewords:22 }}</p>
-                                        <a href="{{ project.get_absolute_url }}" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
-                                    </div>
-                                    {% if project.featured %}
-                                        <span class="badge bg-design rounded-pill ms-auto">Featured</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="text-center">No projects yet — add some from the Django admin panel.</p>
-                    {% endfor %}
-
-                    {% if page_obj.paginator.num_pages > 1 %}
-                        <nav aria-label="Projects pagination">
-                            <ul class="pagination justify-content-center">
-                                {% if page_obj.has_previous %}
-                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                                {% endif %}
-                                {% for num in page_obj.paginator.page_range %}
-                                    <li class="page-item {% if num == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="page-hero-card">
+          <dl>
+            <div><dt>Projects</dt><dd>{{ page_obj.paginator.count }}</dd></div>
+          </dl>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pt-0" id="work" aria-labelledby="grid-title">
+    <div class="container">
+      <h2 class="visually-hidden" id="grid-title">All projects</h2>
+
+      {% if active_tag %}
+        <p class="filter-status">Filtered by tag &mdash; <a class="link-arrow" href="{% url 'portfolio:work_list' %}">clear filter</a></p>
+      {% endif %}
+
+      <ul class="project-grid">
+        {% for project in projects %}
+          <li>
+            <a class="work-card" href="{{ project.get_absolute_url }}">
+              <div class="art-frame grain ratio-45 {% if not project.cover_image %}no-art{% endif %}">
+                {% if project.cover_image %}
+                  <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                {% else %}
+                  <span>{{ project.title }}</span>
+                {% endif %}
+              </div>
+              <div class="work-meta">
+                <div>
+                  {% if project.client %}<span class="chip chip-sun">{{ project.client }}</span>{% endif %}
+                  {% if project.featured %}<span class="chip chip-tom">Featured</span>{% endif %}
+                  <h3>{{ project.title }}</h3>
+                  <p>{{ project.short_description|default:project.content|truncatewords:16 }}</p>
+                </div>
+                <span class="work-view" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+              </div>
+            </a>
+          </li>
+        {% empty %}
+          <li><p>No projects yet &mdash; add some from the Django admin panel.</p></li>
+        {% endfor %}
+      </ul>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+        <ul class="lw-pagination" aria-label="Pagination">
+          {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&larr;</a></li>
+          {% else %}
+            <li><span class="is-disabled">&larr;</span></li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            <li>{% if num == page_obj.number %}<span class="is-current">{{ num }}</span>{% else %}<a href="?page={{ num }}">{{ num }}</a>{% endif %}</li>
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&rarr;</a></li>
+          {% else %}
+            <li><span class="is-disabled">&rarr;</span></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
+  </section>
 
 {% endblock %}

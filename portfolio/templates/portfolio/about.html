@@ -1,129 +1,89 @@
 {% extends 'portfolio/base.html' %}
 {% load static %}
 
-{% block title %}About — {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}About &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
 
 {% block content %}
 
-    <header class="site-header d-flex flex-column justify-content-center align-items-center">
-        <div class="container">
-            <div class="row justify-content-center align-items-center">
-                <div class="col-lg-5 col-12 mb-5">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">About</li>
-                        </ol>
-                    </nav>
-                    <h2 class="text-white">{{ profile.name|default:"About Me" }}</h2>
-                    {% if profile.role %}<p class="text-white">{{ profile.role }}</p>{% endif %}
-
-                    <div class="d-flex align-items-center mt-4">
-                        {% if profile.resume %}
-                            <a href="{{ profile.resume.url }}" class="btn custom-btn custom-border-btn me-4" download>Download Resume</a>
-                        {% endif %}
-                        <a href="{% url 'portfolio:contact' %}" class="custom-icon bi-envelope"></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-5 col-12">
-                    <div class="topics-detail-block bg-white shadow-lg">
-                        {% if profile.avatar %}
-                            <img src="{{ profile.avatar.url }}" class="topics-detail-block-image img-fluid" alt="{{ profile.name }}">
-                        {% else %}
-                            <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="topics-detail-block-image img-fluid" alt="Avatar">
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+  <section class="page-hero" aria-labelledby="page-title">
+    <div class="container">
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">About</li></ol>
+      <div class="page-hero-grid">
+        <div>
+          <h1 id="page-title">About<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{{ profile.role|default:"" }}</p>
         </div>
-    </header>
+        {% if profile.resume %}
+          <div class="page-hero-card">
+            <a class="btn-lw" href="{{ profile.resume.url }}" download>Download resume <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v11M7 12l5 5 5-5M5 20h14"/></svg></a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
 
-
-    <section class="topics-detail-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-12 m-auto">
-                    <h3 class="mb-4">Bio</h3>
-                    {% if profile.bio %}
-                        {{ profile.bio|linebreaks }}
-                    {% else %}
-                        <p>No bio has been added yet — add one from the Django admin panel (Profile).</p>
-                    {% endif %}
-
-                    {% if profile.social_links.all %}
-                        <div class="social-share d-flex mt-4">
-                            <p class="me-4">Find me on:</p>
-                            <ul class="social-icon">
-                                {% for link in profile.social_links.all %}
-                                    <li class="social-icon-item">
-                                        <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon-link {{ link.icon_class }}" title="{{ link.platform }}"></a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                </div>
+  <section class="section pt-0" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal">
+          <h2 class="visually-hidden" id="about-title">Bio</h2>
+          <div class="about-portrait">
+            {% if profile.avatar %}
+              <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}">
+            {% endif %}
+            <div><strong>{{ profile.name|default:"" }}</strong><span>{{ profile.role|default:"" }}</span></div>
+          </div>
+          <div class="prose">{{ profile.bio|default:"No bio has been added yet — add one from the Django admin panel (Profile)."|linebreaks }}</div>
+          <div class="about-facts">
+            {% if profile.location %}<span class="chip">{{ profile.location }}</span>{% endif %}
+            {% if profile.email %}<span class="chip chip-sun"><a href="mailto:{{ profile.email }}" style="color:inherit">{{ profile.email }}</a></span>{% endif %}
+            {% if profile.phone %}<span class="chip chip-cob"><a href="tel:{{ profile.phone }}" style="color:inherit">{{ profile.phone }}</a></span>{% endif %}
+          </div>
+          {% if profile.social_links.all %}
+            <div class="about-facts">
+              {% for link in profile.social_links.all %}
+                <a class="link-arrow" href="{{ link.url }}" target="_blank" rel="noopener">{{ link.platform }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              {% endfor %}
             </div>
+          {% endif %}
         </div>
-    </section>
 
+        {% if skills %}
+          <div class="reveal d1">
+            <p class="eyebrow"><span class="num">01</span> Skills</p>
+            {% for skill in skills %}
+              <div class="skill-row">
+                <div class="skill-top"><span>{{ skill.name }}</span><span>{{ skill.percent }}%</span></div>
+                <div class="skill-bar"><span style="width: {{ skill.percent }}%;"></span></div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
 
-    {% if skills %}
-    <section class="section-padding section-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-12 mx-auto">
-                    <h3 class="mb-4">Skills</h3>
-                    {% for skill in skills %}
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>{{ skill.name }}</span>
-                                <span>{{ skill.percent }}%</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar" role="progressbar" style="width: {{ skill.percent }}%; background-color: #2eca6a;" aria-valuenow="{{ skill.percent }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+  {% if experiences %}
+  <section class="process section" id="experience" aria-labelledby="experience-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><span class="num">02</span> Experience</p>
+          <h2 class="section-title" id="experience-title">Where I've worked</h2>
         </div>
-    </section>
-    {% endif %}
-
-
-    {% if experiences %}
-    <section class="timeline-section section-padding">
-        <div class="section-overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="text-white mb-4">Experience</h2>
-                </div>
-
-                <div class="col-lg-10 col-12 mx-auto">
-                    <div class="timeline-container">
-                        <ul class="vertical-scrollable-timeline">
-                            <div class="list-progress"><div class="inner"></div></div>
-                            {% for exp in experiences %}
-                                <li>
-                                    <h4 class="text-white mb-1">{{ exp.title }}</h4>
-                                    <p class="text-white mb-2">
-                                        <strong>{{ exp.organization }}</strong>{% if exp.location %} &middot; {{ exp.location }}{% endif %}
-                                        <br>
-                                        {{ exp.start_date|date:"M Y" }} — {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}
-                                    </p>
-                                    <p class="text-white">{{ exp.description }}</p>
-                                    <div class="icon-holder"><i class="bi-briefcase"></i></div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endif %}
+      </div>
+      <ol class="process-steps">
+        {% for exp in experiences %}
+          <li class="process-step reveal">
+            <h3><span class="step-no">{{ forloop.counter }}</span> {{ exp.title }}</h3>
+            <p><strong>{{ exp.organization }}</strong>{% if exp.location %} &middot; {{ exp.location }}{% endif %}</p>
+            <p>{{ exp.description }}</p>
+            <span class="chip">{{ exp.start_date|date:"M Y" }} &ndash; {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}</span>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+  {% endif %}
 
 {% endblock %}

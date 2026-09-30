@@ -20,6 +20,11 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
+# Needed for the contact form (POST) to work over HTTPS on your real domain.
+# Example value: https://yourdomain.com,https://www.yourdomain.com
+_csrf_origins = os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(',') if o.strip()]
+
 # -----------------------------------------------------------------------
 # Applications
 # -----------------------------------------------------------------------
@@ -37,6 +42,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Serves collected static files directly from the Python process —
+    # no Apache/.htaccess config needed, which is handy on shared cPanel hosting.
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

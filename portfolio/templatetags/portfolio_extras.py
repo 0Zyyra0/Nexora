@@ -2,18 +2,20 @@ from django import template
 
 register = template.Library()
 
-# The theme's CSS only ships badge colors for these specific class names,
-# so we map our Post.Category values onto the closest matching color.
+# The Linework theme ships exactly four chip colour variants (the base
+# ".chip" plus chip-sun / chip-tom / chip-cob). We only have six Post
+# categories, so a couple of them reuse a colour — that's fine, the
+# label text is what actually distinguishes them.
 _BADGE_CLASS_MAP = {
-    'design': 'bg-design',
-    'graphic': 'bg-graphic',
-    'marketing': 'bg-advertising',
-    'finance': 'bg-finance',
-    'music': 'bg-music',
-    'education': 'bg-education',
+    'design': 'chip-sun',
+    'graphic': 'chip-tom',
+    'marketing': 'chip-cob',
+    'finance': 'chip',
+    'music': 'chip-sun',
+    'education': 'chip-cob',
 }
 
 
 @register.filter
 def category_badge_class(category_value):
-    return _BADGE_CLASS_MAP.get(category_value, 'bg-design')
+    return _BADGE_CLASS_MAP.get(category_value, 'chip')

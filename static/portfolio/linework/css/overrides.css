@@ -1,0 +1,82 @@
+/*
+  Small additions on top of the Linework template's own css/style.css —
+  we don't touch the vendor file so it stays easy to diff/update.
+  These rules just teach the template's components (which were built
+  around inline SVG illustrations) to also work with real <img> photos
+  coming from the Django admin (project covers, post covers, gallery
+  images, the profile avatar).
+*/
+
+.art-frame > img,
+.panel-sheet > img,
+.mock img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fallback tile shown when a Project/Post/etc. has no image uploaded yet. */
+.art-frame.no-art {
+  display: grid;
+  place-items: center;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .04em;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Profile avatar shown in place of the illustrated self-portrait on About. */
+.about-portrait img {
+  width: 108px;
+  height: 108px;
+  flex: none;
+  border: var(--bw) solid var(--ink);
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--sun);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Simple bar used for Skill.percent on the About page — the template
+   has no progress-bar component of its own. */
+.skill-row { margin-bottom: 1.1rem; }
+.skill-row .skill-top { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: .35rem; }
+.skill-bar { height: 12px; border: 2px solid var(--ink); border-radius: 999px; background: var(--art-paper); overflow: hidden; }
+.skill-bar > span { display: block; height: 100%; background: var(--cobalt); }
+
+/* Read-more markdown-ish body copy on blog/project detail pages. */
+.prose p { margin-bottom: 1.1rem; font-size: 1.04rem; }
+.prose img { border: var(--bw) solid var(--ink); border-radius: var(--radius-sm); margin: 1.4rem 0; }
+
+/* Pagination, restyled to match the template's hand-drawn button language. */
+.lw-pagination { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: 2.6rem 0 0; }
+.lw-pagination a, .lw-pagination span {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2.6rem; height: 2.6rem; padding: 0 .6rem;
+  border: 2.5px solid var(--ink); border-radius: 10px;
+  font-family: var(--font-display); font-weight: 700;
+  background: var(--art-paper); color: var(--ink);
+}
+.lw-pagination a:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.lw-pagination .is-current { background: var(--ink); color: var(--paper); }
+.lw-pagination .is-disabled { opacity: .4; }
+
+/* Django messages (contact form success/error) */
+.lw-alert {
+  border: var(--bw) solid var(--ink); border-radius: var(--radius-sm);
+  padding: .9rem 1.1rem; margin-bottom: 1.4rem; font-weight: 600;
+}
+.lw-alert.is-ok { background: var(--sun); }
+.lw-alert.is-error { background: var(--tomato); color: var(--art-paper); }
+
+/* Simple grid used on the Gallery page (no case-study modals needed there). */
+.gallery-grid { display: grid; gap: 1.8rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); list-style: none; padding: 0; margin: 0; }
+.gallery-grid figure { margin: 0; }
+.gallery-grid .art-frame { aspect-ratio: 4 / 5; margin-bottom: .7rem; }
+.gallery-grid figcaption strong { display: block; }
+.gallery-grid figcaption span { color: var(--muted); font-size: .9rem; }

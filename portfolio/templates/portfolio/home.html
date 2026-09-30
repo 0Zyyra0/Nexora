@@ -1,223 +1,163 @@
 {% extends 'portfolio/base.html' %}
 {% load static portfolio_extras %}
 
-{% block title %}{{ profile.name|default:"Portfolio" }} — {{ profile.role|default:"Home" }}{% endblock %}
+{% block title %}{{ profile.name|default:"Portfolio" }} &mdash; {{ profile.role|default:"Home" }}{% endblock %}
 
 {% block content %}
 
-    <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-12 mx-auto">
-                    <h1 class="text-white text-center">{{ profile.name|default:"Hi, I'm a Creative" }}</h1>
-                    <h6 class="text-center">{{ profile.role|default:"welcome to my portfolio & blog" }}</h6>
-
-                    <form method="get" action="{% url 'portfolio:blog_list' %}" class="custom-form mt-4 pt-2 mb-lg-0 mb-5" role="search">
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text bi-search" id="basic-addon1"></span>
-                            <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Search the blog: design, code, marketing ..." aria-label="Search">
-                            <button type="submit" class="form-control">Search</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    {% if featured_posts or featured_projects %}
-    <section class="featured-section">
-        <div class="container">
-            <div class="row justify-content-center">
-
-                {% for post in featured_posts|slice:":1" %}
-                    <div class="col-lg-4 col-12 mb-4 mb-lg-0">
-                        <div class="custom-block bg-white shadow-lg">
-                            <a href="{{ post.get_absolute_url }}">
-                                <div class="d-flex">
-                                    <div>
-                                        <h5 class="mb-2">{{ post.title }}</h5>
-                                        <p class="mb-0">{{ post.excerpt|default:post.content|truncatewords:18 }}</p>
-                                    </div>
-                                    <span class="badge {{ post.category|category_badge_class }} rounded-pill ms-auto">{{ post.get_category_display }}</span>
-                                </div>
-                                {% if post.cover_image %}
-                                    <img src="{{ post.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                {% else %}
-                                    <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                {% endif %}
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-
-                {% for project in featured_projects|slice:":1" %}
-                    <div class="col-lg-6 col-12">
-                        <div class="custom-block custom-block-overlay">
-                            <div class="d-flex flex-column h-100">
-                                {% if project.cover_image %}
-                                    <img src="{{ project.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ project.title }}">
-                                {% else %}
-                                    <img src="{% static 'portfolio/images/businesswoman-using-tablet-analysis.jpg' %}" class="custom-block-image img-fluid" alt="{{ project.title }}">
-                                {% endif %}
-
-                                <div class="custom-block-overlay-text d-flex">
-                                    <div>
-                                        <h5 class="text-white mb-2">{{ project.title }}</h5>
-                                        <p class="text-white">{{ project.short_description|truncatewords:20 }}</p>
-                                        <a href="{{ project.get_absolute_url }}" class="btn custom-btn mt-2 mt-lg-3">Learn More</a>
-                                    </div>
-                                </div>
-
-                                <div class="section-overlay"></div>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    {% for post in featured_posts|slice:"1:2" %}
-                        <div class="col-lg-6 col-12">
-                            <div class="custom-block custom-block-overlay">
-                                <div class="d-flex flex-column h-100">
-                                    {% if post.cover_image %}
-                                        <img src="{{ post.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                    {% else %}
-                                        <img src="{% static 'portfolio/images/businesswoman-using-tablet-analysis.jpg' %}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                    {% endif %}
-                                    <div class="custom-block-overlay-text d-flex">
-                                        <div>
-                                            <h5 class="text-white mb-2">{{ post.title }}</h5>
-                                            <p class="text-white">{{ post.excerpt|default:post.content|truncatewords:20 }}</p>
-                                            <a href="{{ post.get_absolute_url }}" class="btn custom-btn mt-2 mt-lg-3">Learn More</a>
-                                        </div>
-                                    </div>
-                                    <div class="section-overlay"></div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-
-    {% if categories %}
-    <section class="explore-section section-padding" id="section_2">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="mb-4">Browse the Blog by Topic</h2>
-                </div>
-            </div>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          {% if profile.location %}<span class="chip hero-status"><span class="dot" aria-hidden="true"></span> {{ profile.location }}</span>{% endif %}
+          <h1 id="hero-title" class="reveal">{{ profile.name|default:"Hi, I'm a creative" }}<span class="loud"></span></h1>
+          <p class="hero-sub reveal d1">{{ profile.bio|default:"Welcome to my portfolio and blog."|truncatewords:40 }}</p>
+          <div class="hero-actions reveal d2">
+            <a class="btn-lw" href="{% url 'portfolio:work_list' %}">See the work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="btn-lw btn-paper" href="{% url 'portfolio:contact' %}">Get in touch</a>
+          </div>
         </div>
 
-        <div class="container-fluid">
-            <div class="row">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    {% for cat in categories %}
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ cat.value }}-tab" data-bs-toggle="tab" data-bs-target="#{{ cat.value }}-tab-pane" type="button" role="tab" aria-controls="{{ cat.value }}-tab-pane">{{ cat.label }}</button>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+        <div class="hero-art">
+          <span class="hero-shape hero-shape-1" aria-hidden="true"></span>
+          <span class="hero-shape hero-shape-2" aria-hidden="true"></span>
+          <div class="art-frame grain hero-board {% if not profile.avatar %}no-art{% endif %}">
+            <span class="tape tape-tl" aria-hidden="true"></span>
+            {% if profile.avatar %}
+              <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}">
+            {% else %}
+              <span>Add a profile avatar<br>from the Django admin</span>
+            {% endif %}
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="tab-content" id="myTabContent">
-                        {% for cat in categories %}
-                            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ cat.value }}-tab-pane" role="tabpanel" aria-labelledby="{{ cat.value }}-tab" tabindex="0">
-                                <div class="row">
-                                    {% for post in cat.posts %}
-                                        <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
-                                            <div class="custom-block bg-white shadow-lg">
-                                                <a href="{{ post.get_absolute_url }}">
-                                                    <div class="d-flex">
-                                                        <div>
-                                                            <h5 class="mb-2">{{ post.title }}</h5>
-                                                            <p class="mb-0">{{ post.excerpt|default:post.content|truncatewords:12 }}</p>
-                                                        </div>
-                                                        <span class="badge {{ cat.value|category_badge_class }} rounded-pill ms-auto">{{ post.get_category_display }}</span>
-                                                    </div>
-                                                    {% if post.cover_image %}
-                                                        <img src="{{ post.cover_image.url }}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                                    {% else %}
-                                                        <img src="{% static 'portfolio/images/topics/undraw_Remote_design_team_re_urdx.png' %}" class="custom-block-image img-fluid" alt="{{ post.title }}">
-                                                    {% endif %}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="text-center mt-4">
-                                    <a href="{% url 'portfolio:blog_list' %}?category={{ cat.value }}" class="btn custom-btn custom-border-btn">See all {{ cat.label }} posts</a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+  {% if featured_projects %}
+  <!-- ============================ SELECTED WORK ============================ -->
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><span class="num">01</span> Selected work</p>
+          <h2 class="section-title" id="work-title">Recent projects</h2>
+          <p class="section-lead">A few favourites — open any project for the full write-up.</p>
         </div>
-    </section>
-    {% endif %}
-
-
-    <section class="timeline-section section-padding" id="section_3">
-        <div class="section-overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="text-white mb-4">How this site works</h2>
-                </div>
-
-                <div class="col-lg-10 col-12 mx-auto">
-                    <div class="timeline-container">
-                        <ul class="vertical-scrollable-timeline" id="vertical-scrollable-timeline">
-                            <div class="list-progress"><div class="inner"></div></div>
-
-                            <li>
-                                <h4 class="text-white mb-3">Browse Work &amp; Blog</h4>
-                                <p class="text-white">Explore case studies in the <a class="site-footer-link" href="{% url 'portfolio:work_list' %}">Work</a> section, or dive into articles by topic in the <a class="site-footer-link" href="{% url 'portfolio:blog_list' %}">Blog</a>.</p>
-                                <div class="icon-holder"><i class="bi-search"></i></div>
-                            </li>
-
-                            <li>
-                                <h4 class="text-white mb-3">Get to know me</h4>
-                                <p class="text-white">Visit the <a class="site-footer-link" href="{% url 'portfolio:about' %}">About</a> page for my experience, skills and a downloadable resume.</p>
-                                <div class="icon-holder"><i class="bi-person"></i></div>
-                            </li>
-
-                            <li>
-                                <h4 class="text-white mb-3">Say hello</h4>
-                                <p class="text-white">Have a project in mind? Send a message through the <a class="site-footer-link" href="{% url 'portfolio:contact' %}">Contact</a> page and I'll get back to you.</p>
-                                <div class="icon-holder"><i class="bi-envelope"></i></div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        <a class="link-arrow" href="{% url 'portfolio:work_list' %}">All projects <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="work-bento">
+        {% for project in featured_projects %}
+          <a class="work-card {% if forloop.first %}is-feature{% endif %} reveal" href="{{ project.get_absolute_url }}">
+            <div class="art-frame grain ratio-45 {% if not project.cover_image %}no-art{% endif %}">
+              {% if project.cover_image %}
+                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+              {% else %}
+                <span>{{ project.title }}</span>
+              {% endif %}
             </div>
-        </div>
-    </section>
-
-
-    <section class="contact-section section-padding section-bg" id="section_5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-12 text-center">
-                    <h2 class="mb-5">Get in touch</h2>
-                </div>
-
-                <div class="col-lg-6 col-12 mx-auto text-center">
-                    {% if profile.location %}<p><strong>Location:</strong> {{ profile.location }}</p>{% endif %}
-                    {% if profile.email %}<p><strong>Email:</strong> <a href="mailto:{{ profile.email }}" class="site-footer-link">{{ profile.email }}</a></p>{% endif %}
-                    <a href="{% url 'portfolio:contact' %}" class="btn custom-btn mt-3">Send a message</a>
-                </div>
+            <div class="work-meta">
+              <div>
+                {% if project.client %}<span class="chip chip-sun">{{ project.client }}</span>{% endif %}
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.short_description|truncatewords:14 }}</p>
+              </div>
+              <span class="work-view" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if featured_posts %}
+  <!-- ============================ FROM THE BLOG ============================ -->
+  <section class="section {% if featured_projects %}pt-0{% endif %}" id="blog" aria-labelledby="blog-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><span class="num">02</span> From the blog</p>
+          <h2 class="section-title" id="blog-title">Recent writing</h2>
         </div>
-    </section>
+        <a class="link-arrow" href="{% url 'portfolio:blog_list' %}">All posts <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <ul class="project-grid">
+        {% for post in featured_posts %}
+          <li>
+            <a class="work-card" href="{{ post.get_absolute_url }}">
+              <div class="art-frame grain ratio-45 {% if not post.cover_image %}no-art{% endif %}">
+                {% if post.cover_image %}
+                  <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+                {% else %}
+                  <span>{{ post.title }}</span>
+                {% endif %}
+              </div>
+              <div class="work-meta">
+                <div>
+                  <span class="chip {{ post.category|category_badge_class }}">{{ post.get_category_display }}</span>
+                  <h3>{{ post.title }}</h3>
+                  <p>{{ post.excerpt|default:post.content|truncatewords:14 }}</p>
+                </div>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if categories %}
+  <div class="band-wrap" aria-label="Blog categories">
+    <div class="band">
+      <div class="band-track">
+        <ul class="band-list">
+          {% for cat in categories %}
+            <li><a href="{% url 'portfolio:blog_list' %}?category={{ cat.value }}" style="color:inherit"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="#17130e" stroke-width="1.6" stroke-linejoin="round" d="M12 1.5Q13.3 10.7 22.5 12Q13.3 13.3 12 22.5Q10.7 13.3 1.5 12Q10.7 10.7 12 1.5Z"/></svg>{{ cat.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ============================ ABOUT TEASER ============================ -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal">
+          <p class="eyebrow"><span class="num">03</span> About</p>
+          <h2 class="section-title" id="about-title">{{ profile.role|default:"A bit about me" }}</h2>
+          <div class="about-portrait">
+            {% if profile.avatar %}
+              <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}">
+            {% endif %}
+            <div><strong>{{ profile.name|default:"" }}</strong><span>{{ profile.role|default:"" }}</span></div>
+          </div>
+          <p>{{ profile.bio|default:""|truncatewords:45 }}</p>
+          <a class="link-arrow" href="{% url 'portfolio:about' %}">More about me <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CTA ============================ -->
+  <section class="cta section-tight position-relative" aria-labelledby="cta-title">
+    <svg class="cta-star" viewBox="0 0 100 100" aria-hidden="true"><path class="f-sun" stroke="#17130e" stroke-width="4" stroke-linejoin="round" d="M50 4Q59.2 40.8 96 50Q59.2 59.2 50 96Q40.8 59.2 4 50Q40.8 40.8 50 4Z"/></svg>
+    <div class="container">
+      <div class="cta-inner">
+        <h2 id="cta-title">Got a project? Let's talk.</h2>
+        <div>
+          <p>Tell me what you need and I'll get back to you shortly.</p>
+          <div class="cta-actions">
+            <a class="btn-lw btn-ink" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            {% if profile.email %}<a class="btn-lw btn-paper" href="mailto:{{ profile.email }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg> Email me</a>{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

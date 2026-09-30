@@ -1,158 +1,121 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <script>document.documentElement.classList.add('js')</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ profile.name|default:"Portfolio" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ profile.bio|default:"Personal portfolio & blog" }}{% endblock %}">
+  <meta name="theme-color" content="#f4eee2">
+  <meta name="author" content="{{ profile.name }}">
 
-        <meta name="description" content="{% block meta_description %}{{ profile.bio|default:"Personal portfolio & blog" }}{% endblock %}">
-        <meta name="author" content="{{ profile.name }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap" rel="stylesheet">
 
-        <title>{% block title %}{{ profile.name|default:"Portfolio" }}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'portfolio/linework/css/vendor/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'portfolio/linework/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'portfolio/linework/css/overrides.css' %}">
+  {% block extra_css %}{% endblock %}
+  <!--
+  Frontend theme: "Linework" by uiCookies (https://uicookies.com/) — free for
+  personal & commercial use. Wired up to a Django backend.
+  -->
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-        <!-- CSS FILES -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+  <!-- ============================ HEADER ============================ -->
+  <header class="site-header">
+    <nav class="navbar navbar-expand-lg" aria-label="Primary">
+      <div class="container">
+        <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ profile.name|default:'Home' }}">
+          <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle class="f-sun" cx="24" cy="24" r="21" stroke="#17130e" stroke-width="3"/><path d="M9 29c5-10 9 6 14-3s8 5 15-4" fill="none" stroke="#17130e" stroke-width="3.4" stroke-linecap="round"/><circle class="f-tom" cx="34.5" cy="14.5" r="4.5" stroke="#17130e" stroke-width="2.4"/></svg>
+          <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:"Portfolio & blog" }}</span></span>
+        </a>
+        <button class="nav-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#primary-nav" aria-controls="primary-nav" aria-expanded="false" aria-label="Toggle menu">
+          <span></span><span></span>
+        </button>
+        <div class="collapse navbar-collapse" id="primary-nav">
+          <ul class="navbar-nav nav-menu ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %} href="{% url 'portfolio:home' %}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %} href="{% url 'portfolio:about' %}">About</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'work_list' or request.resolver_match.url_name == 'work_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:work_list' %}">Work</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:blog_list' %}">Blog</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %} href="{% url 'portfolio:gallery' %}">Gallery</a></li>
+            <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-        <link href="{% static 'portfolio/css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'portfolio/css/bootstrap-icons.css' %}" rel="stylesheet">
-        <link href="{% static 'portfolio/css/templatemo-topic-listing.css' %}" rel="stylesheet">
-        {% block extra_css %}{% endblock %}
-        <!--
-        Frontend theme: TemplateMo 590 Topic Listing (https://templatemo.com/tm-590-topic-listing)
-        Wired up to a Django backend.
-        -->
-    </head>
+  <main id="main">
+    {% if messages %}
+      <div class="container pt-4">
+        {% for message in messages %}
+          <div class="lw-alert {% if message.tags == 'error' %}is-error{% else %}is-ok{% endif %}" role="status">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-    <body class="{% block body_class %}{% endblock %}" id="top">
+    {% block content %}{% endblock %}
+  </main>
 
-        <main>
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ profile.name|default:'Home' }}">
+            <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle class="f-sun" cx="24" cy="24" r="21" stroke="#17130e" stroke-width="3"/><path d="M9 29c5-10 9 6 14-3s8 5 15-4" fill="none" stroke="#17130e" stroke-width="3.4" stroke-linecap="round"/><circle class="f-tom" cx="34.5" cy="14.5" r="4.5" stroke="#17130e" stroke-width="2.4"/></svg>
+            <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:"" }}</span></span>
+          </a>
+          <p>{{ profile.bio|default:""|truncatewords:28 }}</p>
+        </div>
+        <div>
+          <h2>Explore</h2>
+          <ul class="footer-links">
+            <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+            <li><a href="{% url 'portfolio:about' %}">About</a></li>
+            <li><a href="{% url 'portfolio:work_list' %}">Work</a></li>
+            <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
+            <li><a href="{% url 'portfolio:gallery' %}">Gallery</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Say hello</h2>
+          <ul class="footer-links">
+            {% if profile.email %}<li><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
+            {% if profile.phone %}<li><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}
+            {% if profile.location %}<li>{{ profile.location }}</li>{% endif %}
+            <li><a href="{% url 'portfolio:contact' %}">Contact form</a></li>
+          </ul>
+        </div>
+        <div class="footer-news">
+          <h2>Elsewhere</h2>
+          {% if profile.social_links.all %}
+            <ul class="footer-links">
+              {% for link in profile.social_links.all %}
+                <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.platform }}</a></li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No social links added yet.</p>
+          {% endif %}
+        </div>
+      </div>
+      <p class="footer-mega" aria-hidden="true">{{ profile.name|default:"Portfolio" }}<span>*</span></p>
+      <div class="footer-bottom">
+        <span>&copy; <span data-year>{% now "Y" %}</span> {{ profile.name|default:"Portfolio" }}. All rights reserved.</span>
+        <span>Frontend by <a href="https://uicookies.com/" target="_blank" rel="noopener">uiCookies</a> (Linework)</span>
+      </div>
+    </div>
+  </footer>
 
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
-                    <a class="navbar-brand" href="{% url 'portfolio:home' %}">
-                        <i class="bi-back"></i>
-                        <span>{{ profile.name|default:"Portfolio" }}</span>
-                    </a>
-
-                    <div class="d-lg-none ms-auto me-4">
-                        <a href="{% url 'portfolio:contact' %}" class="navbar-icon bi-person"></a>
-                    </div>
-
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-lg-5 me-lg-auto">
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'portfolio:home' %}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'portfolio:about' %}">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'work_list' or request.resolver_match.url_name == 'work_detail' %}active{% endif %}" href="{% url 'portfolio:work_list' %}">Work</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_detail' %}active{% endif %}" href="{% url 'portfolio:blog_list' %}">Blog</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'portfolio:gallery' %}">Gallery</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'portfolio:contact' %}">Contact</a>
-                            </li>
-                        </ul>
-
-                        <div class="d-none d-lg-block">
-                            <a href="{% url 'portfolio:contact' %}" class="navbar-icon bi-person"></a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {% if messages %}
-                <div class="container mt-3">
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% block content %}{% endblock %}
-        </main>
-
-        <footer class="site-footer section-padding">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-3 col-12 mb-4 pb-2">
-                        <a class="navbar-brand mb-2" href="{% url 'portfolio:home' %}">
-                            <i class="bi-back"></i>
-                            <span>{{ profile.name|default:"Portfolio" }}</span>
-                        </a>
-                        {% if profile.role %}<p class="text-white-50 mb-0">{{ profile.role }}</p>{% endif %}
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <h6 class="site-footer-title mb-3">Explore</h6>
-                        <ul class="site-footer-links">
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:home' %}" class="site-footer-link">Home</a></li>
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:about' %}" class="site-footer-link">About</a></li>
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:work_list' %}" class="site-footer-link">Work</a></li>
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:blog_list' %}" class="site-footer-link">Blog</a></li>
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:gallery' %}" class="site-footer-link">Gallery</a></li>
-                            <li class="site-footer-link-item"><a href="{% url 'portfolio:contact' %}" class="site-footer-link">Contact</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
-                        <h6 class="site-footer-title mb-3">Information</h6>
-                        {% if profile.location %}
-                            <p class="text-white d-flex mb-1">{{ profile.location }}</p>
-                        {% endif %}
-                        {% if profile.phone %}
-                            <p class="text-white d-flex mb-1">
-                                <a href="tel:{{ profile.phone }}" class="site-footer-link">{{ profile.phone }}</a>
-                            </p>
-                        {% endif %}
-                        {% if profile.email %}
-                            <p class="text-white d-flex">
-                                <a href="mailto:{{ profile.email }}" class="site-footer-link">{{ profile.email }}</a>
-                            </p>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-12 mt-4 mt-lg-0 ms-auto">
-                        {% if profile.social_links.all %}
-                            <ul class="social-icon justify-content-lg-end">
-                                {% for link in profile.social_links.all %}
-                                    <li class="social-icon-item">
-                                        <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon-link {{ link.icon_class }}" title="{{ link.platform }}"></a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-
-                        <p class="copyright-text mt-lg-4 mt-4">Copyright &copy; {% now "Y" %} {{ profile.name|default:"Portfolio" }}. All rights reserved.
-                        <br><br>Design: <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a></p>
-                    </div>
-
-                </div>
-            </div>
-        </footer>
-
-        <!-- JAVASCRIPT FILES -->
-        <script src="{% static 'portfolio/js/jquery.min.js' %}"></script>
-        <script src="{% static 'portfolio/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'portfolio/js/jquery.sticky.js' %}"></script>
-        <script src="{% static 'portfolio/js/click-scroll.js' %}"></script>
-        <script src="{% static 'portfolio/js/custom.js' %}"></script>
-        {% block extra_js %}{% endblock %}
-
-    </body>
+  <script src="{% static 'portfolio/linework/js/vendor/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'portfolio/linework/js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
 </html>

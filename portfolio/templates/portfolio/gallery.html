@@ -1,49 +1,42 @@
 {% extends 'portfolio/base.html' %}
 {% load static %}
 
-{% block title %}Gallery — {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}Gallery &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
 
 {% block content %}
 
-    <header class="site-header d-flex flex-column justify-content-center align-items-center">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5 col-12">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Gallery</li>
-                        </ol>
-                    </nav>
-                    <h2 class="text-white">Gallery</h2>
-                </div>
-            </div>
+  <section class="page-hero" aria-labelledby="page-title">
+    <div class="container">
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Gallery</li></ol>
+      <div class="page-hero-grid">
+        <div>
+          <h1 id="page-title">Gallery<span class="text-tomato">.</span></h1>
+          <p class="lead-text">A few extra pictures.</p>
         </div>
-    </header>
+      </div>
+    </div>
+  </section>
 
-
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                {% for img in images %}
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="custom-block bg-white shadow-lg">
-                            <img src="{{ img.image.url }}" class="custom-block-image img-fluid" alt="{{ img.title }}">
-                            {% if img.title or img.caption %}
-                                <div class="p-3">
-                                    {% if img.title %}<h5 class="mb-1">{{ img.title }}</h5>{% endif %}
-                                    {% if img.caption %}<p class="mb-0">{{ img.caption }}</p>{% endif %}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="col-12 text-center">
-                        <p>No images yet — add some from the Django admin panel (Gallery images).</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
+  <section class="section pt-0">
+    <div class="container">
+      <ul class="gallery-grid">
+        {% for img in images %}
+          <li>
+            <figure>
+              <div class="art-frame grain">
+                <img src="{{ img.image.url }}" alt="{{ img.title }}">
+              </div>
+              <figcaption>
+                {% if img.title %}<strong>{{ img.title }}</strong>{% endif %}
+                {% if img.caption %}<span>{{ img.caption }}</span>{% endif %}
+              </figcaption>
+            </figure>
+          </li>
+        {% empty %}
+          <li><p>No images yet &mdash; add some from the Django admin panel (Gallery images).</p></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
 
 {% endblock %}
