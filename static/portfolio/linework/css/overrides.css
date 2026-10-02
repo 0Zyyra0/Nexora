@@ -30,6 +30,27 @@
   padding: 1rem;
 }
 
+/* The owner's name in the big footer type treatment was left-aligned by
+   default (the theme's own CSS never sets text-align on it) — center it
+   relative to the footer container instead. */
+.footer-mega {
+  text-align: center;
+}
+
+/* Like button heart — a quick "pop" on each toggle (both like and unlike)
+   so the click feels confirmed, without moving the page. */
+.like-heart { display: inline-block; }
+.like-heart.like-pop { animation: lwLikePop .4s ease; }
+@keyframes lwLikePop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.5); }
+  60%  { transform: scale(.9); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .like-heart.like-pop { animation: none; }
+}
+
 /* Profile avatar shown in place of the illustrated self-portrait on About. */
 .about-portrait img {
   width: 108px;

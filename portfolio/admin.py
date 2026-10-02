@@ -1,13 +1,17 @@
 from django.contrib import admin
 
 from .models import (
+    Bookmark,
+    Comment,
     ContactMessage,
     Experience,
     GalleryImage,
+    Like,
     Post,
     Profile,
     Project,
     ProjectImage,
+    SecurityCredential,
     Skill,
     SocialLink,
     Tag,
@@ -85,3 +89,48 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ('is_read', 'created_at')
     search_fields = ('name', 'email', 'subject', 'message')
     readonly_fields = ('name', 'email', 'subject', 'message', 'created_at')
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'post', 'status', 'parent', 'created_at')
+    list_filter = ('status', 'post')
+    search_fields = ('name', 'email', 'body')
+    readonly_fields = ('post', 'parent', 'user', 'name', 'email', 'body', 'ip_address', 'created_at')
+    actions = ['make_approved', 'make_rejected', 'make_spam']
+
+    @admin.action(description='Approve selected comments')
+    def make_approved(self, request, queryset):
+        updated = queryset.update(status=Comment.Status.APPROVED)
+        self.message_user(request, f'{updated} comment(s) approved.')
+
+    @admin.action(description='Reject selected comments')
+    def make_rejected(self, request, queryset):
+        updated = queryset.update(status=Comment.Status.REJECTED)
+        self.message_user(request, f'{updated} comment(s) rejected.')
+
+    @admin.action(description='Mark selected comments as spam')
+    def make_spam(self, request, queryset):
+        updated = queryset.update(status=Comment.Status.SPAM)
+        self.message_user(request, f'{updated} comment(s) marked as spam.')
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('post', 'user', 'session_key', 'created_at')
+    list_filter = ('post',)
+    readonly_fields = ('post', 'user', 'session_key', 'created_at')
+
+
+@admin.register(Bookmark)
+class BookmarkAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'created_at')
+    list_filter = ('post',)
+    readonly_fields = ('user', 'post', 'created_at')
+
+
+@admin.register(SecurityCredential)
+class SecurityCredentialAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question')
+    search_fields = ('user__email', 'user__username', 'question')
+    readonly_fields = ('user', 'question', 'answer_hash')

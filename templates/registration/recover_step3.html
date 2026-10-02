@@ -1,0 +1,34 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Set a new password &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
+</head>
+<body class="nb">
+  <div class="nb-wrap">
+    <form class="nb-box" method="post" novalidate>
+      {% csrf_token %}
+      <span class="nb-tag">Step 3 of 3</span>
+      <h1>Choose a new password.</h1>
+      <p class="nb-sub">Verified — set a new password to finish.</p>
+
+      {% if form.non_field_errors %}
+        <div class="nb-error">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <label class="nb-label" for="{{ form.new_password1.id_for_label }}">New password</label>
+      <input class="nb-input" type="password" id="{{ form.new_password1.id_for_label }}" name="{{ form.new_password1.html_name }}" placeholder="Top secret" autocomplete="new-password" required autofocus>
+      {% if form.new_password1.errors %}<p class="nb-field-error">{{ form.new_password1.errors.0 }}</p>{% endif %}
+
+      <label class="nb-label" for="{{ form.new_password2.id_for_label }}">Confirm new password</label>
+      <input class="nb-input" type="password" id="{{ form.new_password2.id_for_label }}" name="{{ form.new_password2.html_name }}" placeholder="One more time" autocomplete="new-password" required>
+      {% if form.new_password2.errors %}<p class="nb-field-error">{{ form.new_password2.errors.0 }}</p>{% endif %}
+
+      <button class="nb-btn" type="submit">Reset password <span aria-hidden="true">&rarr;</span></button>
+    </form>
+  </div>
+</body>
+</html>

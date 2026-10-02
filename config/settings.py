@@ -123,4 +123,16 @@ BLOG_POSTS_PER_PAGE = 6
 PROJECTS_PER_PAGE = 9
 
 # Login required only for /admin/, everything else is public.
-LOGIN_URL = '/admin/login/'
+# Member-facing login (NOT the Django admin login — that's separate and
+# unaffected by this setting).
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/profile/'
+LOGOUT_REDIRECT_URL = '/'
+
+# EmailBackend makes the site's own login form (which asks for an email)
+# authenticate correctly; ModelBackend stays second so /admin/ (which asks
+# for an actual username) keeps working unchanged.
+AUTHENTICATION_BACKENDS = [
+    'portfolio.auth_backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

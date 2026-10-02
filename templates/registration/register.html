@@ -1,0 +1,51 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
+</head>
+<body class="nb">
+  <div class="nb-wrap">
+    <form class="nb-box" method="post" novalidate>
+      {% csrf_token %}
+      <span class="nb-tag">New here?</span>
+      <h1>Create an account.</h1>
+      <p class="nb-sub">Save articles, like posts, and keep track of your comments.</p>
+
+      {% if form.non_field_errors %}
+        <div class="nb-error">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <label class="nb-label" for="{{ form.email.id_for_label }}">Email</label>
+      {{ form.email }}
+      {% if form.email.errors %}<p class="nb-field-error">{{ form.email.errors.0 }}</p>{% endif %}
+
+      <label class="nb-label" for="{{ form.password1.id_for_label }}">Password</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}<p class="nb-field-error">{{ form.password1.errors.0 }}</p>{% endif %}
+
+      <label class="nb-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}<p class="nb-field-error">{{ form.password2.errors.0 }}</p>{% endif %}
+
+      <label class="nb-label" for="{{ form.security_question.id_for_label }}">Security question</label>
+      {{ form.security_question }}
+      <p class="nb-note" style="margin-top:-12px; margin-bottom:18px;">{{ form.security_question.help_text }}</p>
+      {% if form.security_question.errors %}<p class="nb-field-error">{{ form.security_question.errors.0 }}</p>{% endif %}
+
+      <label class="nb-label" for="{{ form.security_answer.id_for_label }}">Answer</label>
+      {{ form.security_answer }}
+      {% if form.security_answer.errors %}<p class="nb-field-error">{{ form.security_answer.errors.0 }}</p>{% endif %}
+
+      <button class="nb-btn" type="submit">Create account <span aria-hidden="true">&rarr;</span></button>
+      <div class="nb-links">
+        <a href="{% url 'login' %}">Already have an account?</a>
+        <a href="{% url 'portfolio:home' %}">Back to site</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

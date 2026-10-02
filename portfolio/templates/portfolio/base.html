@@ -18,10 +18,7 @@
   <link rel="stylesheet" href="{% static 'portfolio/linework/css/style.css' %}">
   <link rel="stylesheet" href="{% static 'portfolio/linework/css/overrides.css' %}">
   {% block extra_css %}{% endblock %}
-  <!--
-  Frontend theme: "Linework" by uiCookies (https://uicookies.com/) — free for
-  personal & commercial use. Wired up to a Django backend.
-  -->
+  <!-- Frontend theme: "Linework" — wired up to a Django backend. -->
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -44,6 +41,11 @@
             <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'work_list' or request.resolver_match.url_name == 'work_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:work_list' %}">Work</a></li>
             <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:blog_list' %}">Blog</a></li>
             <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %} href="{% url 'portfolio:gallery' %}">Gallery</a></li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'portfolio:profile_dashboard' %}">My account</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log in</a></li>
+            {% endif %}
             <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
           </ul>
         </div>
@@ -109,7 +111,6 @@
       <p class="footer-mega" aria-hidden="true">{{ profile.name|default:"Portfolio" }}<span>*</span></p>
       <div class="footer-bottom">
         <span>&copy; <span data-year>{% now "Y" %}</span> {{ profile.name|default:"Portfolio" }}. All rights reserved.</span>
-        <span>Frontend by <a href="https://uicookies.com/" target="_blank" rel="noopener">uiCookies</a> (Linework)</span>
       </div>
     </div>
   </footer>

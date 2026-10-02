@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
@@ -244,3 +246,104 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f'{self.name} <{self.email}> - {self.subject or "(no subject)"}'
+
+
+# ---------------------------------------------------------------------------
+# Blog comments — guest commenting (name + email, no account required),
+# single-level replies, and admin moderation (approve/reject/spam).
+# ---------------------------------------------------------------------------
+class Comment(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        SPAM = 'spam', 'Spam'
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey(
+        'self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies',
+        help_text='Set automatically when this comment is a reply to another one.',
+    )
+    # Optional — set automatically when the commenter is logged in, so their
+    # own comments can show up on their profile page.
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='comments',
+    )
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    body = models.TextField()
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'{self.name} on {self.post.title}'
+
+    @property
+    def is_approved(self):
+        return self.status == self.Status.APPROVED
+
+
+# ---------------------------------------------------------------------------
+# One like per (post, session) — works for anonymous visitors (via their
+# session cookie) and keeps a `user` reference too so logged-in people can
+# see their liked articles on their profile page.
+# ---------------------------------------------------------------------------
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+        related_name='post_likes',
+    )
+    session_key = models.CharField(max_length=40, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['post', 'session_key'], name='unique_like_per_session'),
+        ]
+
+    def __str__(self):
+        return f'Like on {self.post.title}'
+
+
+# ---------------------------------------------------------------------------
+# Saved / bookmarked articles — requires an account.
+# ---------------------------------------------------------------------------
+class Bookmark(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookmarks')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='bookmarked_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name='unique_bookmark_per_user'),
+        ]
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user} saved {self.post.title}'
+
+
+# ---------------------------------------------------------------------------
+# Security-question password recovery (no email sending involved). The
+# answer is hashed with Django's own password hasher — never stored as
+# plain text — and compared case-insensitively.
+# ---------------------------------------------------------------------------
+class SecurityCredential(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='security')
+    question = models.CharField(max_length=255)
+    answer_hash = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'Security question for {self.user}'
+
+    def set_answer(self, raw_answer):
+        self.answer_hash = make_password(raw_answer.strip().lower())
+
+    def check_answer(self, raw_answer):
+        return check_password(raw_answer.strip().lower(), self.answer_hash)

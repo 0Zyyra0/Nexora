@@ -1,0 +1,148 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My account &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
+</head>
+<body class="nb nb-dash">
+  <div class="nb-wrap nb-wide">
+    <div class="nb-box">
+      <div class="nb-dash-head">
+        <div>
+          <span class="nb-tag">Signed in as {{ user.email|default:user.username }}</span>
+          <h1>My account.</h1>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <a class="nb-btn-small" href="{% url 'portfolio:home' %}">Back to site</a>
+          <form method="post" action="{% url 'logout' %}" style="margin:0;">
+            {% csrf_token %}
+            <button class="nb-btn-small" type="submit" style="border:3px solid var(--nb-ink);">Log out</button>
+          </form>
+        </div>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="{% if message.tags == 'error' %}nb-error{% else %}nb-chip is-approved{% endif %}" style="margin-bottom:18px; display:block;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="nb-section">
+        <h2>🔖 Saved articles</h2>
+        {% if bookmarks %}
+          <ul class="nb-list">
+            {% for bookmark in bookmarks %}
+              <li class="nb-list-item">
+                <a class="nb-list-title" href="{{ bookmark.post.get_absolute_url }}">{{ bookmark.post.title }}</a>
+                <form method="post" action="{% url 'portfolio:bookmark_toggle' bookmark.post.slug %}" style="margin:0;">
+                  {% csrf_token %}
+                  <button class="nb-btn-small" type="submit">Remove</button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="nb-empty">Nothing saved yet — look for the 🔖 Save button on any post.</p>
+        {% endif %}
+      </div>
+
+      <div class="nb-section">
+        <h2>♡ Liked articles</h2>
+        {% if liked_posts %}
+          <ul class="nb-list">
+            {% for post in liked_posts %}
+              <li class="nb-list-item">
+                <a class="nb-list-title" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="nb-empty">No likes yet — hit ♡ on a post you enjoy.</p>
+        {% endif %}
+      </div>
+
+      <div class="nb-section">
+        <h2>💬 My comments</h2>
+        {% if my_comments %}
+          <ul class="nb-list">
+            {% for comment in my_comments %}
+              <li class="nb-list-item">
+                <div>
+                  <a class="nb-list-title" href="{{ comment.post.get_absolute_url }}#comments">{{ comment.post.title }}</a>
+                  <p style="margin:4px 0 0; font-size:.88rem; font-weight:600;">{{ comment.body|truncatewords:20 }}</p>
+                </div>
+                <span class="nb-chip is-{{ comment.status }}">{{ comment.get_status_display }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="nb-empty">You haven't commented on anything yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="nb-section">
+        <h2>Account details</h2>
+        <form method="post" action="{% url 'portfolio:profile_edit' %}" style="max-width:420px;">
+          {% csrf_token %}
+          <label class="nb-label" for="id_first_name">First name</label>
+          {{ profile_form.first_name }}
+          {% if profile_form.first_name.errors %}<p class="nb-field-error">{{ profile_form.first_name.errors.0 }}</p>{% endif %}
+
+          <label class="nb-label" for="id_last_name">Last name</label>
+          {{ profile_form.last_name }}
+          {% if profile_form.last_name.errors %}<p class="nb-field-error">{{ profile_form.last_name.errors.0 }}</p>{% endif %}
+
+          <label class="nb-label" for="id_email">Email</label>
+          {{ profile_form.email }}
+          {% if profile_form.email.errors %}<p class="nb-field-error">{{ profile_form.email.errors.0 }}</p>{% endif %}
+
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Save details</button>
+        </form>
+      </div>
+
+      <div class="nb-section">
+        <h2>Change password</h2>
+        <form method="post" action="{% url 'portfolio:profile_password_change' %}" style="max-width:420px;">
+          {% csrf_token %}
+          <label class="nb-label" for="id_old_password">Current password</label>
+          {{ password_form.old_password }}
+          {% if password_form.old_password.errors %}<p class="nb-field-error">{{ password_form.old_password.errors.0 }}</p>{% endif %}
+
+          <label class="nb-label" for="id_new_password1">New password</label>
+          {{ password_form.new_password1 }}
+          {% if password_form.new_password1.errors %}<p class="nb-field-error">{{ password_form.new_password1.errors.0 }}</p>{% endif %}
+
+          <label class="nb-label" for="id_new_password2">Confirm new password</label>
+          {{ password_form.new_password2 }}
+          {% if password_form.new_password2.errors %}<p class="nb-field-error">{{ password_form.new_password2.errors.0 }}</p>{% endif %}
+
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Update password</button>
+        </form>
+      </div>
+
+      <div class="nb-section">
+        <h2>Security question</h2>
+        <p class="nb-note" style="margin-top:0;">
+          {% if has_security_question %}Used to recover your account without email.{% else %}You don't have one set yet — add one so you can recover your account later.{% endif %}
+        </p>
+        <form method="post" action="{% url 'portfolio:profile_security_edit' %}" style="max-width:420px;">
+          {% csrf_token %}
+          <label class="nb-label" for="id_question">Security question</label>
+          {{ security_form.question }}
+          {% if security_form.question.errors %}<p class="nb-field-error">{{ security_form.question.errors.0 }}</p>{% endif %}
+
+          <label class="nb-label" for="id_new_answer">{% if has_security_question %}New answer{% else %}Answer{% endif %}</label>
+          {{ security_form.new_answer }}
+          {% if security_form.new_answer.errors %}<p class="nb-field-error">{{ security_form.new_answer.errors.0 }}</p>{% endif %}
+
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Save security question</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

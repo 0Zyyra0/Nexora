@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
+</head>
+<body class="nb">
+  <div class="nb-wrap">
+    <form class="nb-box" method="post" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+      {% csrf_token %}
+      <span class="nb-tag">Members only</span>
+      <h1>Log in.</h1>
+      <p class="nb-sub">No fluff. Just your inbox and your work.</p>
+
+      {% if form.non_field_errors %}
+        <div class="nb-error">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <label class="nb-label" for="nb-email">Email</label>
+      <input class="nb-input" type="email" id="nb-email" name="username" placeholder="you@example.com" autocomplete="username" required autofocus>
+
+      <label class="nb-label" for="nb-password">Password</label>
+      <input class="nb-input" type="password" id="nb-password" name="password" placeholder="Top secret" autocomplete="current-password" required>
+
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+      <button class="nb-btn" type="submit">Let me in <span aria-hidden="true">&rarr;</span></button>
+      <div class="nb-links">
+        <a href="{% url 'portfolio:recover_step1' %}">Lost password</a>
+        <a href="{% url 'portfolio:register' %}">Join instead</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
