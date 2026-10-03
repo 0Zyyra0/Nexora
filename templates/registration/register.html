@@ -19,26 +19,63 @@
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>
       {% endif %}
 
-      <label class="nb-label" for="{{ form.email.id_for_label }}">Email</label>
-      {{ form.email }}
-      {% if form.email.errors %}<p class="nb-field-error">{{ form.email.errors.0 }}</p>{% endif %}
+      <div class="nb-group-title">Account</div>
 
-      <label class="nb-label" for="{{ form.password1.id_for_label }}">Password</label>
-      {{ form.password1 }}
-      {% if form.password1.errors %}<p class="nb-field-error">{{ form.password1.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.email.id_for_label }}">Email</label>
+        <div class="nb-input-wrap">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
+          {{ form.email }}
+        </div>
+        {% if form.email.errors %}<p class="nb-field-error">{{ form.email.errors.0 }}</p>{% endif %}
+      </div>
 
-      <label class="nb-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
-      {{ form.password2 }}
-      {% if form.password2.errors %}<p class="nb-field-error">{{ form.password2.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.password1.id_for_label }}">Password</label>
+        <div class="nb-input-wrap has-toggle">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          {{ form.password1 }}
+          <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        {% if form.password1.errors %}<p class="nb-field-error">{{ form.password1.errors.0 }}</p>{% endif %}
+      </div>
 
-      <label class="nb-label" for="{{ form.security_question.id_for_label }}">Security question</label>
-      {{ form.security_question }}
-      <p class="nb-note" style="margin-top:-12px; margin-bottom:18px;">{{ form.security_question.help_text }}</p>
-      {% if form.security_question.errors %}<p class="nb-field-error">{{ form.security_question.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
+        <div class="nb-input-wrap has-toggle">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          {{ form.password2 }}
+          <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        {% if form.password2.errors %}<p class="nb-field-error">{{ form.password2.errors.0 }}</p>{% endif %}
+      </div>
 
-      <label class="nb-label" for="{{ form.security_answer.id_for_label }}">Answer</label>
-      {{ form.security_answer }}
-      {% if form.security_answer.errors %}<p class="nb-field-error">{{ form.security_answer.errors.0 }}</p>{% endif %}
+      <hr class="nb-divider">
+
+      <div class="nb-group-title">Security question</div>
+      <p class="nb-note" style="margin-top:-6px;">Used to recover your account later &mdash; no email needed.</p>
+
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.security_question.id_for_label }}">Question</label>
+        <div class="nb-input-wrap">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7v.3"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
+          {{ form.security_question }}
+        </div>
+        {% if form.security_question.errors %}<p class="nb-field-error">{{ form.security_question.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.security_answer.id_for_label }}">Answer</label>
+        <div class="nb-input-wrap">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ form.security_answer }}
+        </div>
+        {% if form.security_answer.errors %}<p class="nb-field-error">{{ form.security_answer.errors.0 }}</p>{% endif %}
+      </div>
 
       <button class="nb-btn" type="submit">Create account <span aria-hidden="true">&rarr;</span></button>
       <div class="nb-links">
@@ -47,5 +84,6 @@
       </div>
     </form>
   </div>
+  <script src="{% static 'portfolio/accounts/nb.js' %}"></script>
 </body>
 </html>

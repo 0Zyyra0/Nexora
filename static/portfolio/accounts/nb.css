@@ -1,66 +1,501 @@
-/* Neobrutalist account area: 3px black borders, hard offset shadows, and
-   controls that press into the page. Based on the login design supplied
-   by the site owner — reused here for register/profile/logout too so the
-   whole "members" section has one consistent look. */
-.nb{--nb-ink:#111;--nb-yellow:#ffde59;--nb-violet:#a78bfa;--nb-green:#4ade80;
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--nb-yellow);
-  background-image:radial-gradient(#00000012 1.5px,transparent 1.5px);background-size:22px 22px;color:var(--nb-ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-/* Dashboard (and any other long, scrolling page) uses this modifier instead
-   of fighting the login/register pages' vertical centering above. */
-.nb.nb-dash{align-items:flex-start;padding-top:6vh;padding-bottom:6vh}
-.nb-wrap{width:100%;max-width:400px}
-.nb h1,.nb p{margin:0}
-.nb-box{width:100%;background:#fff;border:3px solid var(--nb-ink);border-radius:14px;box-shadow:8px 8px 0 var(--nb-ink);padding:38px 34px}
-.nb-tag{display:inline-block;background:var(--nb-violet);border:3px solid var(--nb-ink);border-radius:8px;font-weight:800;font-size:.75rem;letter-spacing:.05em;
-  padding:5px 10px;box-shadow:3px 3px 0 var(--nb-ink);margin-bottom:18px;text-transform:uppercase}
-.nb h1{font-size:1.8rem;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
-.nb-sub{font-size:.92rem;font-weight:600;color:#444;margin-bottom:26px!important}
-.nb-label{display:block;font-size:.85rem;font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
-.nb-input{display:block;width:100%;padding:12px 14px;margin-bottom:18px;border:3px solid var(--nb-ink);border-radius:10px;background:#fff;color:inherit;
-  font:inherit;font-size:.95rem;font-weight:600;transition:box-shadow .12s,transform .12s}
-.nb-input::placeholder{color:#666}
-.nb-input:focus{outline:none;box-shadow:4px 4px 0 var(--nb-ink);transform:translate(-2px,-2px)}
-.nb-btn{width:100%;padding:14px;border:3px solid var(--nb-ink);border-radius:10px;background:var(--nb-green);color:var(--nb-ink);font:inherit;font-size:1rem;
-  font-weight:900;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:5px 5px 0 var(--nb-ink);transition:box-shadow .12s,transform .12s}
-.nb-btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--nb-ink)}
-.nb-btn:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--nb-ink)}
-.nb-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;font-size:.85rem;font-weight:800}
-.nb-links a{color:var(--nb-ink);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px;text-decoration-color:var(--nb-violet)}
-.nb-links a:hover{text-decoration-color:var(--nb-green)}
-.nb a:focus-visible,.nb-btn:focus-visible{outline:3px solid var(--nb-ink);outline-offset:3px;border-radius:4px}
-.nb-btn:focus-visible{border-radius:10px}
-@media (prefers-reduced-motion:reduce){.nb-input,.nb-btn{transition:none}.nb-input:focus,.nb-btn:hover,.nb-btn:active{transform:none}}
-@media (max-width:480px){
-  .nb{padding:16px}
-  .nb-box{padding:28px 22px;border-radius:12px;box-shadow:6px 6px 0 var(--nb-ink)}
-  .nb h1{font-size:1.5rem}
-  .nb-links{flex-direction:column;gap:10px}
+/* Neobrutalist account area: 3px black borders, hard offset shadows,
+   and controls that press into the page. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* --- additions for register / errors / dashboard, same visual language --- */
-.nb-error{background:#fecaca;border:3px solid var(--nb-ink);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-weight:700;font-size:.85rem}
-.nb-field-error{color:#b91c1c;font-weight:700;font-size:.8rem;margin:-12px 0 14px}
-.nb-note{font-size:.85rem;font-weight:600;color:#444;margin-top:18px!important}
+.nb {
+  --nb-ink: #111;
+  --nb-yellow: #ffde59;
+  --nb-violet: #a78bfa;
+  --nb-green: #4ade80;
 
-.nb-wrap.nb-wide{max-width:900px}
-.nb-dash-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.nb-dash-head h1{font-size:2rem}
-.nb-chip{display:inline-block;background:var(--nb-violet);border:3px solid var(--nb-ink);border-radius:8px;font-weight:800;font-size:.75rem;
-  padding:5px 10px;box-shadow:3px 3px 0 var(--nb-ink);text-transform:uppercase}
-.nb-chip.is-approved{background:var(--nb-green)}
-.nb-chip.is-pending{background:#fde047}
-.nb-chip.is-rejected,.nb-chip.is-spam{background:#fca5a5}
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 
-.nb-section{margin-bottom:34px}
-.nb-section h2{font-size:1.2rem;font-weight:900;margin-bottom:14px;letter-spacing:-.02em}
-.nb-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.nb-list-item{background:#fff;border:3px solid var(--nb-ink);border-radius:10px;box-shadow:4px 4px 0 var(--nb-ink);
-  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.nb-list-item a.nb-list-title{font-weight:800;color:var(--nb-ink);text-decoration:underline;text-decoration-color:var(--nb-violet);
-  text-decoration-thickness:3px;text-underline-offset:3px}
-.nb-list-item a.nb-list-title:hover{text-decoration-color:var(--nb-green)}
-.nb-empty{font-weight:600;color:#555;font-size:.9rem}
-.nb-btn-small{display:inline-block;border:3px solid var(--nb-ink);border-radius:8px;background:#fff;color:var(--nb-ink);font-weight:800;
-  font-size:.78rem;text-transform:uppercase;padding:6px 10px;box-shadow:3px 3px 0 var(--nb-ink);cursor:pointer;text-decoration:none}
-.nb-btn-small:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--nb-ink)}
+  background: var(--nb-yellow);
+  background-image: radial-gradient(#00000012 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+
+  color: var(--nb-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+.nb.nb-dash {
+  align-items: flex-start;
+  padding-top: 6vh;
+  padding-bottom: 6vh;
+}
+
+.nb-wrap {
+  width: 100%;
+  max-width: 460px;
+}
+
+.nb h1,
+.nb p {
+  margin: 0;
+}
+
+.nb-box {
+  width: 100%;
+  background: #fff;
+  border: 3px solid var(--nb-ink);
+  border-radius: 14px;
+  box-shadow: 8px 8px 0 var(--nb-ink);
+  padding: 38px 34px;
+}
+
+.nb-tag {
+  display: inline-block;
+  background: var(--nb-violet);
+  border: 3px solid var(--nb-ink);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 5px 10px;
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.nb h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.nb-sub {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 26px !important;
+}
+
+.nb-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Django form widgets */
+.nb-input,
+.nb-box input,
+.nb-box select,
+.nb-box textarea {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  margin: 0 0 18px;
+
+  border: 3px solid var(--nb-ink);
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  transition: box-shadow 0.12s, transform 0.12s;
+}
+
+.nb-input::placeholder,
+.nb-box input::placeholder,
+.nb-box textarea::placeholder {
+  color: #666;
+}
+
+.nb-input:focus,
+.nb-box input:focus,
+.nb-box select:focus,
+.nb-box textarea:focus {
+  outline: none;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+  transform: translate(-2px, -2px);
+}
+
+.nb-box select {
+  cursor: pointer;
+}
+
+.nb-btn {
+  width: 100%;
+  padding: 14px;
+
+  border: 3px solid var(--nb-ink);
+  border-radius: 10px;
+  background: var(--nb-green);
+  color: var(--nb-ink);
+
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  cursor: pointer;
+  box-shadow: 5px 5px 0 var(--nb-ink);
+  transition: box-shadow 0.12s, transform 0.12s;
+}
+
+.nb-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--nb-ink);
+}
+
+.nb-btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--nb-ink);
+}
+
+.nb-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  margin-top: 22px;
+
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.nb-links a {
+  color: var(--nb-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--nb-violet);
+}
+
+.nb-links a:hover {
+  text-decoration-color: var(--nb-green);
+}
+
+.nb a:focus-visible,
+.nb-btn:focus-visible {
+  outline: 3px solid var(--nb-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.nb-btn:focus-visible {
+  border-radius: 10px;
+}
+
+/* ---------------------------------------------------------------------
+   Field layout: a consistent wrapper (icon + input + optional toggle)
+   instead of ad-hoc margins on bare <label>/<input> pairs. Same colours
+   and font as the rest of .nb — this only touches spacing/structure.
+   ------------------------------------------------------------------- */
+.nb-field {
+  margin-bottom: 20px;
+}
+
+.nb-field:last-child {
+  margin-bottom: 0;
+}
+
+.nb-field .nb-label {
+  margin-bottom: 8px;
+}
+
+.nb-input-wrap {
+  position: relative;
+}
+
+.nb-input-wrap .nb-input,
+.nb-input-wrap input {
+  margin: 0;
+  padding-left: 44px;
+}
+
+.nb-input-wrap.has-toggle .nb-input,
+.nb-input-wrap.has-toggle input {
+  padding-right: 44px;
+}
+
+.nb-input-wrap .nb-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--nb-ink);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.nb-input-wrap:focus-within .nb-icon {
+  opacity: 0.9;
+}
+
+.nb-pw-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--nb-ink);
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.nb-pw-toggle:hover {
+  opacity: 0.9;
+}
+
+.nb-pw-toggle[aria-pressed="true"] {
+  opacity: 1;
+  background: var(--nb-yellow);
+  border: 2px solid var(--nb-ink);
+}
+
+.nb-pw-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Section grouping — e.g. "Account" vs "Security question" on the
+   register form, or each block on the profile dashboard. */
+.nb-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nb-ink);
+  opacity: 0.55;
+  margin: 28px 0 14px;
+}
+
+.nb-group-title:first-child {
+  margin-top: 0;
+}
+
+.nb-group-title::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 3px;
+  background: var(--nb-violet);
+  border: 2px solid var(--nb-ink);
+}
+
+.nb-divider {
+  border: none;
+  border-top: 2px dashed rgba(17, 17, 17, 0.2);
+  margin: 26px 0;
+}
+
+/* Errors */
+.nb-error {
+  background: #fecaca;
+  border: 3px solid var(--nb-ink);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.nb-field-error {
+  color: #b91c1c;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin: 6px 0 0;
+}
+
+.nb-note {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin: 6px 0 20px;
+}
+
+.nb-note:last-child {
+  margin-bottom: 0;
+}
+
+/* Dashboard */
+.nb-wrap.nb-wide {
+  max-width: 900px;
+}
+
+.nb-dash-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.nb-dash-head h1 {
+  font-size: 2rem;
+}
+
+.nb-chip {
+  display: inline-block;
+  background: var(--nb-violet);
+  border: 3px solid var(--nb-ink);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  text-transform: uppercase;
+}
+
+.nb-chip.is-approved {
+  background: var(--nb-green);
+}
+
+.nb-chip.is-pending {
+  background: #fde047;
+}
+
+.nb-chip.is-rejected,
+.nb-chip.is-spam {
+  background: #fca5a5;
+}
+
+.nb-section {
+  margin-bottom: 34px;
+}
+
+.nb-section h2 {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+.nb-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nb-list-item {
+  background: #fff;
+  border: 3px solid var(--nb-ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nb-list-item a.nb-list-title {
+  font-weight: 800;
+  color: var(--nb-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--nb-violet);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+}
+
+.nb-list-item a.nb-list-title:hover {
+  text-decoration-color: var(--nb-green);
+}
+
+.nb-empty {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.nb-btn-small {
+  display: inline-block;
+  border: 3px solid var(--nb-ink);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--nb-ink);
+  font-weight: 800;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nb-btn-small:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--nb-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nb-input,
+  .nb-box input,
+  .nb-box select,
+  .nb-box textarea,
+  .nb-btn {
+    transition: none;
+  }
+
+  .nb-input:focus,
+  .nb-box input:focus,
+  .nb-box select:focus,
+  .nb-box textarea:focus,
+  .nb-btn:hover,
+  .nb-btn:active {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nb {
+    padding: 16px;
+  }
+
+  .nb-box {
+    padding: 28px 22px;
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--nb-ink);
+  }
+
+  .nb h1 {
+    font-size: 1.5rem;
+  }
+
+  .nb-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}

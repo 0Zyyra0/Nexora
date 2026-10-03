@@ -19,16 +19,33 @@
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>
       {% endif %}
 
-      <label class="nb-label" for="{{ form.new_password1.id_for_label }}">New password</label>
-      <input class="nb-input" type="password" id="{{ form.new_password1.id_for_label }}" name="{{ form.new_password1.html_name }}" placeholder="Top secret" autocomplete="new-password" required autofocus>
-      {% if form.new_password1.errors %}<p class="nb-field-error">{{ form.new_password1.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.new_password1.id_for_label }}">New password</label>
+        <div class="nb-input-wrap has-toggle">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <input class="nb-input" type="password" id="{{ form.new_password1.id_for_label }}" name="{{ form.new_password1.html_name }}" placeholder="Top secret" autocomplete="new-password" required autofocus>
+          <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        {% if form.new_password1.errors %}<p class="nb-field-error">{{ form.new_password1.errors.0 }}</p>{% endif %}
+      </div>
 
-      <label class="nb-label" for="{{ form.new_password2.id_for_label }}">Confirm new password</label>
-      <input class="nb-input" type="password" id="{{ form.new_password2.id_for_label }}" name="{{ form.new_password2.html_name }}" placeholder="One more time" autocomplete="new-password" required>
-      {% if form.new_password2.errors %}<p class="nb-field-error">{{ form.new_password2.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.new_password2.id_for_label }}">Confirm new password</label>
+        <div class="nb-input-wrap has-toggle">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <input class="nb-input" type="password" id="{{ form.new_password2.id_for_label }}" name="{{ form.new_password2.html_name }}" placeholder="One more time" autocomplete="new-password" required>
+          <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        {% if form.new_password2.errors %}<p class="nb-field-error">{{ form.new_password2.errors.0 }}</p>{% endif %}
+      </div>
 
       <button class="nb-btn" type="submit">Reset password <span aria-hidden="true">&rarr;</span></button>
     </form>
   </div>
+  <script src="{% static 'portfolio/accounts/nb.js' %}"></script>
 </body>
 </html>

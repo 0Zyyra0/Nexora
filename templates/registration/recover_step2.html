@@ -19,9 +19,14 @@
         {% for message in messages %}<div class="nb-error">{{ message }}</div>{% endfor %}
       {% endif %}
 
-      <label class="nb-label" for="{{ form.answer.id_for_label }}">Your answer</label>
-      {{ form.answer }}
-      {% if form.answer.errors %}<p class="nb-field-error">{{ form.answer.errors.0 }}</p>{% endif %}
+      <div class="nb-field">
+        <label class="nb-label" for="{{ form.answer.id_for_label }}">Your answer</label>
+        <div class="nb-input-wrap">
+          <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ form.answer }}
+        </div>
+        {% if form.answer.errors %}<p class="nb-field-error">{{ form.answer.errors.0 }}</p>{% endif %}
+      </div>
 
       <button class="nb-btn" type="submit">Verify <span aria-hidden="true">&rarr;</span></button>
       <div class="nb-links">
