@@ -11,9 +11,9 @@
   <div class="nb-wrap">
     <form class="nb-box" method="post" novalidate>
       {% csrf_token %}
-      <span class="nb-tag">New here?</span>
-      <h1>Create an account.</h1>
-      <p class="nb-sub">Save articles, like posts, and keep track of your comments.</p>
+      <span class="nb-tag">{{ site_settings.register_tag }}</span>
+      <h1>{{ site_settings.register_title }}</h1>
+      <p class="nb-sub">{{ site_settings.register_subtitle }}</p>
 
       {% if form.non_field_errors %}
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>

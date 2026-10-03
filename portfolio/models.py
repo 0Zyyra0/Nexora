@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import DatabaseError, models
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -347,3 +347,120 @@ class SecurityCredential(models.Model):
 
     def check_answer(self, raw_answer):
         return check_password(raw_answer.strip().lower(), self.answer_hash)
+
+
+# ---------------------------------------------------------------------------
+# Site settings — a single-row model holding all editable page text
+# (headings, intros, buttons, taglines) so it can be changed from the admin.
+# ---------------------------------------------------------------------------
+def _text(default, max_length=255):
+    return models.CharField(max_length=max_length, default=default, blank=True)
+
+
+class SiteSettings(models.Model):
+    # Global / header / footer
+    tagline = _text('Portfolio & blog')
+    meta_description = _text('Personal portfolio & blog')
+    nav_cta = _text('Get in touch')
+    footer_explore_title = _text('Explore')
+    footer_contact_title = _text('Say hello')
+    footer_social_title = _text('Elsewhere')
+    footer_copyright = _text('All rights reserved.')
+
+    # Home
+    home_hero_fallback_title = _text("Hi, I'm a creative")
+    home_hero_fallback_intro = _text('Welcome to my portfolio and blog.')
+    home_hero_primary_button = _text('See the work')
+    home_hero_secondary_button = _text('Get in touch')
+    home_work_eyebrow = _text('Selected work')
+    home_work_title = _text('Recent projects')
+    home_work_lead = _text('A few favourites — open any project for the full write-up.')
+    home_work_link = _text('All projects')
+    home_blog_eyebrow = _text('From the blog')
+    home_blog_title = _text('Recent writing')
+    home_blog_link = _text('All posts')
+    home_about_eyebrow = _text('About')
+    home_about_fallback_title = _text('A bit about me')
+    home_about_link = _text('More about me')
+    cta_title = _text("Got a project? Let's talk.")
+    cta_text = _text("Tell me what you need and I'll get back to you shortly.")
+    cta_button = _text('Get in touch')
+    cta_email_button = _text('Email me')
+
+    # About
+    about_title = _text('About')
+    about_resume_button = _text('Download resume')
+    about_skills_title = _text('Skills')
+    about_experience_eyebrow = _text('Experience')
+    about_experience_title = _text("Where I've worked")
+
+    # Work
+    work_title = _text('Work')
+    work_intro = _text('Case studies and projects, open any one for the full write-up.')
+    work_related_title = _text('Related projects')
+
+    # Blog
+    blog_title = _text('Blog')
+    blog_intro = _text("Writing on things I'm working on.")
+    blog_comment_form_title = _text('Leave a comment')
+    blog_comment_form_note = _text('Comments are shown after approval.')
+
+    # Gallery
+    gallery_title = _text('Gallery')
+    gallery_intro = _text('A few extra pictures.')
+
+    # Contact
+    contact_title = _text('Contact')
+    contact_intro = _text("Tell me a bit about what you need — I'll get back to you shortly.")
+    contact_details_title = _text('Other ways to reach me')
+    contact_submit_button = _text('Send message')
+
+    # Account pages
+    login_tag = _text('Members only')
+    login_title = _text('Log in.')
+    login_subtitle = _text('No fluff. Just your inbox and your work.')
+    register_tag = _text('New here?')
+    register_title = _text('Create an account.')
+    register_subtitle = _text('Save articles, like posts, and keep track of your comments.')
+    logged_out_tag = _text('See you soon')
+    logged_out_title = _text('Logged out.')
+    logged_out_subtitle = _text("You've been signed out of your account.")
+    dashboard_title = _text('My account.')
+    recover_tag = _text('Account recovery')
+    recover_title = _text('Forgot your password?')
+    recover_subtitle = _text('No email needed — just answer your security question.')
+    recover_question_tag = _text('Step 2 of 3')
+    recover_question_subtitle = _text("Answer exactly as you set it up — it's not case-sensitive.")
+    recover_reset_tag = _text('Step 3 of 3')
+    recover_reset_title = _text('Choose a new password.')
+    recover_reset_subtitle = _text('Verified — set a new password to finish.')
+
+    # 404 page
+    not_found_badge = _text('OOPS.')
+    not_found_title = _text('This page ghosted you.')
+    not_found_text = _text("We looked everywhere. Behind the couch. In the junk drawer. It's gone.")
+    not_found_button = _text('Take me home →')
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Site settings'
+        verbose_name_plural = 'Site settings'
+
+    def __str__(self):
+        return 'Site settings'
+
+    def save(self, *args, **kwargs):
+        # Keep this a singleton: always reuse the first row.
+        if not self.pk and SiteSettings.objects.exists():
+            self.pk = SiteSettings.objects.first().pk
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """Return the saved settings, or an unsaved instance with the defaults."""
+        try:
+            return cls.objects.first() or cls()
+        except DatabaseError:
+            # Table missing (migrations not applied yet) — fall back to defaults.
+            return cls()

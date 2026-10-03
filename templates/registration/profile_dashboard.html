@@ -13,7 +13,7 @@
       <div class="nb-dash-head">
         <div>
           <span class="nb-tag">Signed in as {{ user.email|default:user.username }}</span>
-          <h1>My account.</h1>
+          <h1>{{ site_settings.dashboard_title }}</h1>
         </div>
         <div style="display:flex; gap:10px;">
           <a class="nb-btn-small" href="{% url 'portfolio:home' %}">Back to site</a>

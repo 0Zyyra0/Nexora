@@ -105,6 +105,8 @@ TEMPLATES = [
 
                 # Makes `profile` available in every template.
                 "portfolio.context_processors.profile",
+                # Makes editable page text available as `site_settings`.
+                "portfolio.context_processors.site_settings",
             ],
         },
     },

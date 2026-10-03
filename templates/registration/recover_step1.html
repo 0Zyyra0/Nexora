@@ -11,9 +11,9 @@
   <div class="nb-wrap">
     <form class="nb-box" method="post" novalidate>
       {% csrf_token %}
-      <span class="nb-tag">Account recovery</span>
-      <h1>Forgot your password?</h1>
-      <p class="nb-sub">No email needed — just answer your security question.</p>
+      <span class="nb-tag">{{ site_settings.recover_tag }}</span>
+      <h1>{{ site_settings.recover_title }}</h1>
+      <p class="nb-sub">{{ site_settings.recover_subtitle }}</p>
 
       {% if messages %}
         {% for message in messages %}<div class="nb-error">{{ message }}</div>{% endfor %}

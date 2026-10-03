@@ -1,17 +1,17 @@
 {% extends 'portfolio/base.html' %}
 {% load static %}
 
-{% block title %}Contact &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{{ site_settings.contact_title }} &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Contact</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">{{ site_settings.contact_title }}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Contact<span class="text-tomato">.</span></h1>
-          <p class="lead-text">Tell me a bit about what you need &mdash; I'll get back to you shortly.</p>
+          <h1 id="page-title">{{ site_settings.contact_title }}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{{ site_settings.contact_intro }}</p>
         </div>
       </div>
     </div>
@@ -50,12 +50,12 @@
             </div>
           </fieldset>
 
-          <button class="btn-lw" type="submit">Send message <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button class="btn-lw" type="submit">{{ site_settings.contact_submit_button }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </form>
 
         <div>
           <p class="eyebrow"><span class="num">&bull;</span> Details</p>
-          <h2 class="section-title" style="font-size:2rem;">Other ways to reach me</h2>
+          <h2 class="section-title" style="font-size:2rem;">{{ site_settings.contact_details_title }}</h2>
           <ul class="footer-links" style="padding:0; list-style:none; font-size:1.05rem;">
             {% if profile.email %}<li style="padding:.4rem 0;"><a class="link-arrow" href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
             {% if profile.phone %}<li style="padding:.4rem 0;"><a class="link-arrow" href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}

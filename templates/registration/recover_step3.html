@@ -11,9 +11,9 @@
   <div class="nb-wrap">
     <form class="nb-box" method="post" novalidate>
       {% csrf_token %}
-      <span class="nb-tag">Step 3 of 3</span>
-      <h1>Choose a new password.</h1>
-      <p class="nb-sub">Verified — set a new password to finish.</p>
+      <span class="nb-tag">{{ site_settings.recover_reset_tag }}</span>
+      <h1>{{ site_settings.recover_reset_title }}</h1>
+      <p class="nb-sub">{{ site_settings.recover_reset_subtitle }}</p>
 
       {% if form.non_field_errors %}
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>

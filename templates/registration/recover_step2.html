@@ -11,9 +11,9 @@
   <div class="nb-wrap">
     <form class="nb-box" method="post" novalidate>
       {% csrf_token %}
-      <span class="nb-tag">Step 2 of 3</span>
+      <span class="nb-tag">{{ site_settings.recover_question_tag }}</span>
       <h1>{{ question }}</h1>
-      <p class="nb-sub">Answer exactly as you set it up — it's not case-sensitive.</p>
+      <p class="nb-sub">{{ site_settings.recover_question_subtitle }}</p>
 
       {% if messages %}
         {% for message in messages %}<div class="nb-error">{{ message }}</div>{% endfor %}
