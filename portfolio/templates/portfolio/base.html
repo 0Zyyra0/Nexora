@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ profile.name|default:"Portfolio" }}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}{{ profile.bio|default:"Personal portfolio & blog" }}{% endblock %}">
+  <meta name="description" content="{% block meta_description %}{{ profile.bio|default:site_settings.meta_description }}{% endblock %}">
   <meta name="theme-color" content="#f4eee2">
   <meta name="author" content="{{ profile.name }}">
 
@@ -29,7 +29,7 @@
       <div class="container">
         <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ profile.name|default:'Home' }}">
           <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle class="f-sun" cx="24" cy="24" r="21" stroke="#17130e" stroke-width="3"/><path d="M9 29c5-10 9 6 14-3s8 5 15-4" fill="none" stroke="#17130e" stroke-width="3.4" stroke-linecap="round"/><circle class="f-tom" cx="34.5" cy="14.5" r="4.5" stroke="#17130e" stroke-width="2.4"/></svg>
-          <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:"Portfolio & blog" }}</span></span>
+          <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:site_settings.tagline }}</span></span>
         </a>
         <button class="nav-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#primary-nav" aria-controls="primary-nav" aria-expanded="false" aria-label="Toggle menu">
           <span></span><span></span>
@@ -46,7 +46,7 @@
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log in</a></li>
             {% endif %}
-            <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+            <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">{{ site_settings.nav_cta }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
           </ul>
         </div>
       </div>
@@ -77,7 +77,7 @@
           <p>{{ profile.bio|default:""|truncatewords:28 }}</p>
         </div>
         <div>
-          <h2>Explore</h2>
+          <h2>{{ site_settings.footer_explore_title }}</h2>
           <ul class="footer-links">
             <li><a href="{% url 'portfolio:home' %}">Home</a></li>
             <li><a href="{% url 'portfolio:about' %}">About</a></li>
@@ -87,7 +87,7 @@
           </ul>
         </div>
         <div>
-          <h2>Say hello</h2>
+          <h2>{{ site_settings.footer_contact_title }}</h2>
           <ul class="footer-links">
             {% if profile.email %}<li><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
             {% if profile.phone %}<li><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}
@@ -96,7 +96,7 @@
           </ul>
         </div>
         <div class="footer-news">
-          <h2>Elsewhere</h2>
+          <h2>{{ site_settings.footer_social_title }}</h2>
           {% if profile.social_links.all %}
             <ul class="footer-links">
               {% for link in profile.social_links.all %}
@@ -110,7 +110,7 @@
       </div>
       <p class="footer-mega" aria-hidden="true">{{ profile.name|default:"Portfolio" }}<span>*</span></p>
       <div class="footer-bottom">
-        <span>&copy; <span data-year>{% now "Y" %}</span> {{ profile.name|default:"Portfolio" }}. All rights reserved.</span>
+        <span>&copy; <span data-year>{% now "Y" %}</span> {{ profile.name|default:"Portfolio" }}. {{ site_settings.footer_copyright }}</span>
       </div>
     </div>
   </footer>

@@ -11,9 +11,9 @@
   <div class="nb-wrap">
     <form class="nb-box" method="post" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
       {% csrf_token %}
-      <span class="nb-tag">Members only</span>
-      <h1>Log in.</h1>
-      <p class="nb-sub">No fluff. Just your inbox and your work.</p>
+      <span class="nb-tag">{{ site_settings.login_tag }}</span>
+      <h1>{{ site_settings.login_title }}</h1>
+      <p class="nb-sub">{{ site_settings.login_subtitle }}</p>
 
       {% if form.non_field_errors %}
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>

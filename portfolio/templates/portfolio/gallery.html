@@ -1,17 +1,17 @@
 {% extends 'portfolio/base.html' %}
 {% load static %}
 
-{% block title %}Gallery &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{{ site_settings.gallery_title }} &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Gallery</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">{{ site_settings.gallery_title }}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Gallery<span class="text-tomato">.</span></h1>
-          <p class="lead-text">A few extra pictures.</p>
+          <h1 id="page-title">{{ site_settings.gallery_title }}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{{ site_settings.gallery_intro }}</p>
         </div>
       </div>
     </div>

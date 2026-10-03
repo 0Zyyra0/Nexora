@@ -114,7 +114,7 @@
         {% endfor %}
       </ul>
 
-      <h3 style="font-size:1.1rem; margin-bottom:1rem;">Leave a comment</h3>
+      <h3 style="font-size:1.1rem; margin-bottom:1rem;">{{ site_settings.blog_comment_form_title }}</h3>
       <form class="form-card" method="post" action="{% url 'portfolio:comment_create' post.slug %}" style="max-width:36rem;">
         {% csrf_token %}
         <div class="field" style="margin-bottom:1rem;">
@@ -130,7 +130,7 @@
           {{ comment_form.body }}
         </div>
         <button type="submit" class="btn-lw">Post comment</button>
-        <p style="font-size:.8rem; color:var(--muted); margin-top:.6rem;">Comments are shown after approval.</p>
+        <p style="font-size:.8rem; color:var(--muted); margin-top:.6rem;">{{ site_settings.blog_comment_form_note }}</p>
       </form>
     </div>
   </section>

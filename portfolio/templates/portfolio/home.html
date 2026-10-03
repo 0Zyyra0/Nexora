@@ -11,11 +11,11 @@
       <div class="hero-grid">
         <div class="hero-copy">
           {% if profile.location %}<span class="chip hero-status"><span class="dot" aria-hidden="true"></span> {{ profile.location }}</span>{% endif %}
-          <h1 id="hero-title" class="reveal">{{ profile.name|default:"Hi, I'm a creative" }}<span class="loud"></span></h1>
-          <p class="hero-sub reveal d1">{{ profile.bio|default:"Welcome to my portfolio and blog."|truncatewords:40 }}</p>
+          <h1 id="hero-title" class="reveal">{{ profile.name|default:site_settings.home_hero_fallback_title }}<span class="loud"></span></h1>
+          <p class="hero-sub reveal d1">{{ profile.bio|default:site_settings.home_hero_fallback_intro|truncatewords:40 }}</p>
           <div class="hero-actions reveal d2">
-            <a class="btn-lw" href="{% url 'portfolio:work_list' %}">See the work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="btn-lw btn-paper" href="{% url 'portfolio:contact' %}">Get in touch</a>
+            <a class="btn-lw" href="{% url 'portfolio:work_list' %}">{{ site_settings.home_hero_primary_button }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="btn-lw btn-paper" href="{% url 'portfolio:contact' %}">{{ site_settings.home_hero_secondary_button }}</a>
           </div>
         </div>
 
@@ -41,11 +41,11 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <p class="eyebrow"><span class="num">01</span> Selected work</p>
-          <h2 class="section-title" id="work-title">Recent projects</h2>
-          <p class="section-lead">A few favourites — open any project for the full write-up.</p>
+          <p class="eyebrow"><span class="num">01</span> {{ site_settings.home_work_eyebrow }}</p>
+          <h2 class="section-title" id="work-title">{{ site_settings.home_work_title }}</h2>
+          <p class="section-lead">{{ site_settings.home_work_lead }}</p>
         </div>
-        <a class="link-arrow" href="{% url 'portfolio:work_list' %}">All projects <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="link-arrow" href="{% url 'portfolio:work_list' %}">{{ site_settings.home_work_link }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
       <div class="work-bento">
         {% for project in featured_projects %}
@@ -78,10 +78,10 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <p class="eyebrow"><span class="num">02</span> From the blog</p>
-          <h2 class="section-title" id="blog-title">Recent writing</h2>
+          <p class="eyebrow"><span class="num">02</span> {{ site_settings.home_blog_eyebrow }}</p>
+          <h2 class="section-title" id="blog-title">{{ site_settings.home_blog_title }}</h2>
         </div>
-        <a class="link-arrow" href="{% url 'portfolio:blog_list' %}">All posts <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="link-arrow" href="{% url 'portfolio:blog_list' %}">{{ site_settings.home_blog_link }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
       <ul class="project-grid">
         {% for post in featured_posts %}
@@ -128,8 +128,8 @@
     <div class="container">
       <div class="about-grid">
         <div class="reveal">
-          <p class="eyebrow"><span class="num">03</span> About</p>
-          <h2 class="section-title" id="about-title">{{ profile.role|default:"A bit about me" }}</h2>
+          <p class="eyebrow"><span class="num">03</span> {{ site_settings.home_about_eyebrow }}</p>
+          <h2 class="section-title" id="about-title">{{ profile.role|default:site_settings.home_about_fallback_title }}</h2>
           <div class="about-portrait">
             {% if profile.avatar %}
               <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}">
@@ -137,7 +137,7 @@
             <div><strong>{{ profile.name|default:"" }}</strong><span>{{ profile.role|default:"" }}</span></div>
           </div>
           <p>{{ profile.bio|default:""|truncatewords:45 }}</p>
-          <a class="link-arrow" href="{% url 'portfolio:about' %}">More about me <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="link-arrow" href="{% url 'portfolio:about' %}">{{ site_settings.home_about_link }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </div>
     </div>
@@ -148,12 +148,12 @@
     <svg class="cta-star" viewBox="0 0 100 100" aria-hidden="true"><path class="f-sun" stroke="#17130e" stroke-width="4" stroke-linejoin="round" d="M50 4Q59.2 40.8 96 50Q59.2 59.2 50 96Q40.8 59.2 4 50Q40.8 40.8 50 4Z"/></svg>
     <div class="container">
       <div class="cta-inner">
-        <h2 id="cta-title">Got a project? Let's talk.</h2>
+        <h2 id="cta-title">{{ site_settings.cta_title }}</h2>
         <div>
-          <p>Tell me what you need and I'll get back to you shortly.</p>
+          <p>{{ site_settings.cta_text }}</p>
           <div class="cta-actions">
-            <a class="btn-lw btn-ink" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            {% if profile.email %}<a class="btn-lw btn-paper" href="mailto:{{ profile.email }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg> Email me</a>{% endif %}
+            <a class="btn-lw btn-ink" href="{% url 'portfolio:contact' %}">{{ site_settings.cta_button }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            {% if profile.email %}<a class="btn-lw btn-paper" href="mailto:{{ profile.email }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg> {{ site_settings.cta_email_button }}</a>{% endif %}
           </div>
         </div>
       </div>

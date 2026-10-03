@@ -12,6 +12,7 @@ from .models import (
     Project,
     ProjectImage,
     SecurityCredential,
+    SiteSettings,
     Skill,
     SocialLink,
     Tag,
@@ -134,3 +135,50 @@ class SecurityCredentialAdmin(admin.ModelAdmin):
     list_display = ('user', 'question')
     search_fields = ('user__email', 'user__username', 'question')
     readonly_fields = ('user', 'question', 'answer_hash')
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Header & footer', {'fields': (
+            'tagline', 'meta_description', 'nav_cta', 'footer_explore_title',
+            'footer_contact_title', 'footer_social_title', 'footer_copyright',
+        )}),
+        ('Home page', {'fields': (
+            'home_hero_fallback_title', 'home_hero_fallback_intro',
+            'home_hero_primary_button', 'home_hero_secondary_button',
+            'home_work_eyebrow', 'home_work_title', 'home_work_lead', 'home_work_link',
+            'home_blog_eyebrow', 'home_blog_title', 'home_blog_link',
+            'home_about_eyebrow', 'home_about_fallback_title', 'home_about_link',
+        )}),
+        ('Call to action (home page)', {'fields': ('cta_title', 'cta_text', 'cta_button', 'cta_email_button')}),
+        ('About page', {'fields': (
+            'about_title', 'about_resume_button', 'about_skills_title',
+            'about_experience_eyebrow', 'about_experience_title',
+        )}),
+        ('Work pages', {'fields': ('work_title', 'work_intro', 'work_related_title')}),
+        ('Blog pages', {'fields': ('blog_title', 'blog_intro', 'blog_comment_form_title', 'blog_comment_form_note')}),
+        ('Gallery page', {'fields': ('gallery_title', 'gallery_intro')}),
+        ('Contact page', {'fields': ('contact_title', 'contact_intro', 'contact_details_title', 'contact_submit_button')}),
+        ('Account pages', {'classes': ('collapse',), 'fields': (
+            'login_tag', 'login_title', 'login_subtitle',
+            'register_tag', 'register_title', 'register_subtitle',
+            'logged_out_tag', 'logged_out_title', 'logged_out_subtitle',
+            'dashboard_title',
+            'recover_tag', 'recover_title', 'recover_subtitle',
+            'recover_question_tag', 'recover_question_subtitle',
+            'recover_reset_tag', 'recover_reset_title', 'recover_reset_subtitle',
+        )}),
+        ('404 page', {'classes': ('collapse',), 'fields': (
+            'not_found_badge', 'not_found_title', 'not_found_text', 'not_found_button',
+        )}),
+    )
+
+    def has_add_permission(self, request):
+        # Enforce a single SiteSettings row from the admin UI.
+        if SiteSettings.objects.exists():
+            return False
+        return super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return False

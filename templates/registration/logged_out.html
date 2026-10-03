@@ -10,9 +10,9 @@
 <body class="nb">
   <div class="nb-wrap">
     <div class="nb-box" style="text-align:center;">
-      <span class="nb-tag">See you soon</span>
-      <h1>Logged out.</h1>
-      <p class="nb-sub">You've been signed out of your account.</p>
+      <span class="nb-tag">{{ site_settings.logged_out_tag }}</span>
+      <h1>{{ site_settings.logged_out_title }}</h1>
+      <p class="nb-sub">{{ site_settings.logged_out_subtitle }}</p>
       <a class="nb-btn" style="display:block;text-decoration:none;text-align:center;" href="{% url 'login' %}">Log back in &rarr;</a>
       <div class="nb-links">
         <a href="{% url 'portfolio:home' %}">Back to site</a>
