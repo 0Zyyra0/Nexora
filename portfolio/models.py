@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import DatabaseError, models
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -459,4 +459,8 @@ class SiteSettings(models.Model):
     @classmethod
     def load(cls):
         """Return the saved settings, or an unsaved instance with the defaults."""
-        return cls.objects.first() or cls()
+        try:
+            return cls.objects.first() or cls()
+        except DatabaseError:
+            # Table missing (migrations not applied yet) — fall back to defaults.
+            return cls()
