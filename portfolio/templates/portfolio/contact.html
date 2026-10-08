@@ -1,17 +1,17 @@
 {% extends 'portfolio/base.html' %}
-{% load static %}
+{% load static sitetext %}
 
-{% block title %}Contact &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{% sitetext 'contact.title' name=brand_name %}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Contact</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li aria-current="page">{% sitetext 'contact.contact' %}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Contact<span class="text-tomato">.</span></h1>
-          <p class="lead-text">Tell me a bit about what you need &mdash; I'll get back to you shortly.</p>
+          <h1 id="page-title">{% sitetext 'contact.contact' %}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{% sitetext 'contact.tell_me_a_bit_about' %}</p>
         </div>
       </div>
     </div>
@@ -24,38 +24,38 @@
         <form class="form-card" method="post" novalidate>
           {% csrf_token %}
           <fieldset>
-            <legend><span class="step-no">1</span> Your message</legend>
+            <legend><span class="step-no">1</span> {% sitetext 'contact.your_message' %}</legend>
 
             <div class="field {% if form.name.errors %}is-invalid{% endif %}" style="margin-bottom: 1.3rem;">
-              <label class="form-label" for="{{ form.name.id_for_label }}">Name</label>
+              <label class="form-label" for="{{ form.name.id_for_label }}">{% sitetext 'common.name' %}</label>
               {{ form.name }}
               {% for error in form.name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
             </div>
 
             <div class="field {% if form.email.errors %}is-invalid{% endif %}" style="margin-bottom: 1.3rem;">
-              <label class="form-label" for="{{ form.email.id_for_label }}">Email address</label>
+              <label class="form-label" for="{{ form.email.id_for_label }}">{% sitetext 'contact.email_address' %}</label>
               {{ form.email }}
               {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
             </div>
 
             <div class="field" style="margin-bottom: 1.3rem;">
-              <label class="form-label" for="{{ form.subject.id_for_label }}">Subject <span class="opt">(optional)</span></label>
+              <label class="form-label" for="{{ form.subject.id_for_label }}">{% sitetext 'contact.subject' %} <span class="opt">{% sitetext 'contact.optional' %}</span></label>
               {{ form.subject }}
             </div>
 
             <div class="field {% if form.message.errors %}is-invalid{% endif %}">
-              <label class="form-label" for="{{ form.message.id_for_label }}">Message</label>
+              <label class="form-label" for="{{ form.message.id_for_label }}">{% sitetext 'contact.message' %}</label>
               {{ form.message }}
               {% for error in form.message.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
             </div>
           </fieldset>
 
-          <button class="btn-lw" type="submit">Send message <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button class="btn-lw" type="submit">{% sitetext 'contact.send_message' %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </form>
 
         <div>
-          <p class="eyebrow"><span class="num">&bull;</span> Details</p>
-          <h2 class="section-title" style="font-size:2rem;">Other ways to reach me</h2>
+          <p class="eyebrow"><span class="num">&bull;</span> {% sitetext 'contact.details' %}</p>
+          <h2 class="section-title" style="font-size:2rem;">{% sitetext 'contact.other_ways_to_reach_me' %}</h2>
           <ul class="footer-links" style="padding:0; list-style:none; font-size:1.05rem;">
             {% if profile.email %}<li style="padding:.4rem 0;"><a class="link-arrow" href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
             {% if profile.phone %}<li style="padding:.4rem 0;"><a class="link-arrow" href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}

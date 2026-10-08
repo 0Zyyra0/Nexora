@@ -1,26 +1,26 @@
-{% load static %}
+{% load static sitetext %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Security question &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <title>{% sitetext 'recover.title_security_question' name=brand_name %}</title>
   <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
 </head>
 <body class="nb">
   <div class="nb-wrap">
     <form class="nb-box" method="post" novalidate>
       {% csrf_token %}
-      <span class="nb-tag">Step 2 of 3</span>
+      <span class="nb-tag">{% sitetext 'recover.step_2_of_3' %}</span>
       <h1>{{ question }}</h1>
-      <p class="nb-sub">Answer exactly as you set it up — it's not case-sensitive.</p>
+      <p class="nb-sub">{% sitetext 'recover.answer_exactly_as_you_set' %}</p>
 
       {% if messages %}
         {% for message in messages %}<div class="nb-error">{{ message }}</div>{% endfor %}
       {% endif %}
 
       <div class="nb-field">
-        <label class="nb-label" for="{{ form.answer.id_for_label }}">Your answer</label>
+        <label class="nb-label" for="{{ form.answer.id_for_label }}">{% sitetext 'recover.your_answer' %}</label>
         <div class="nb-input-wrap">
           <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
           {{ form.answer }}
@@ -28,10 +28,10 @@
         {% if form.answer.errors %}<p class="nb-field-error">{{ form.answer.errors.0 }}</p>{% endif %}
       </div>
 
-      <button class="nb-btn" type="submit">Verify <span aria-hidden="true">&rarr;</span></button>
+      <button class="nb-btn" type="submit">{% sitetext 'recover.verify' %} <span aria-hidden="true">&rarr;</span></button>
       <div class="nb-links">
-        <a href="{% url 'portfolio:recover_step1' %}">Start over</a>
-        <a href="{% url 'login' %}">Back to login</a>
+        <a href="{% url 'portfolio:recover_step1' %}">{% sitetext 'recover.start_over' %}</a>
+        <a href="{% url 'login' %}">{% sitetext 'common.back_to_login' %}</a>
       </div>
     </form>
   </div>

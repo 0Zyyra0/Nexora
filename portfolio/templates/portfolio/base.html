@@ -1,12 +1,12 @@
-{% load static %}
+{% load static sitetext %}
 <!doctype html>
 <html lang="en">
 <head>
   <script>document.documentElement.classList.add('js')</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ profile.name|default:"Portfolio" }}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}{{ profile.bio|default:"Personal portfolio & blog" }}{% endblock %}">
+  <title>{% block title %}{{ brand_name }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{% sitetext 'layout.meta_description' as t_meta %}{{ profile.bio|default:t_meta }}{% endblock %}">
   <meta name="theme-color" content="#f4eee2">
   <meta name="author" content="{{ profile.name }}">
 
@@ -21,32 +21,32 @@
   <!-- Frontend theme: "Linework" — wired up to a Django backend. -->
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+  <a class="skip-link" href="#main">{% sitetext 'layout.skip_to_main_content' %}</a>
 
   <!-- ============================ HEADER ============================ -->
   <header class="site-header">
-    <nav class="navbar navbar-expand-lg" aria-label="Primary">
+    <nav class="navbar navbar-expand-lg" aria-label="{% sitetext 'layout.primary' %}">
       <div class="container">
-        <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ profile.name|default:'Home' }}">
+        <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ brand_name }}">
           <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle class="f-sun" cx="24" cy="24" r="21" stroke="#17130e" stroke-width="3"/><path d="M9 29c5-10 9 6 14-3s8 5 15-4" fill="none" stroke="#17130e" stroke-width="3.4" stroke-linecap="round"/><circle class="f-tom" cx="34.5" cy="14.5" r="4.5" stroke="#17130e" stroke-width="2.4"/></svg>
-          <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:"Portfolio & blog" }}</span></span>
+          <span><span class="brand-name">{{ brand_name }}</span><span class="brand-sub">{% sitetext 'layout.tagline' as t_tagline %}{{ profile.role|default:t_tagline }}</span></span>
         </a>
-        <button class="nav-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#primary-nav" aria-controls="primary-nav" aria-expanded="false" aria-label="Toggle menu">
+        <button class="nav-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#primary-nav" aria-controls="primary-nav" aria-expanded="false" aria-label="{% sitetext 'layout.toggle_menu' %}">
           <span></span><span></span>
         </button>
         <div class="collapse navbar-collapse" id="primary-nav">
           <ul class="navbar-nav nav-menu ms-auto align-items-lg-center">
-            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %} href="{% url 'portfolio:home' %}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %} href="{% url 'portfolio:about' %}">About</a></li>
-            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'work_list' or request.resolver_match.url_name == 'work_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:work_list' %}">Work</a></li>
-            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:blog_list' %}">Blog</a></li>
-            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %} href="{% url 'portfolio:gallery' %}">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %} href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %} href="{% url 'portfolio:about' %}">{% sitetext 'common.about' %}</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'work_list' or request.resolver_match.url_name == 'work_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:work_list' %}">{% sitetext 'common.work' %}</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'blog_detail' %}aria-current="page"{% endif %} href="{% url 'portfolio:blog_list' %}">{% sitetext 'common.blog' %}</a></li>
+            <li class="nav-item"><a class="nav-link" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %} href="{% url 'portfolio:gallery' %}">{% sitetext 'common.gallery' %}</a></li>
             {% if request.user.is_authenticated %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'portfolio:profile_dashboard' %}">My account</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'portfolio:profile_dashboard' %}">{% sitetext 'layout.my_account' %}</a></li>
             {% else %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log in</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% sitetext 'layout.log_in' %}</a></li>
             {% endif %}
-            <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">Get in touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+            <li class="nav-item"><a class="btn-lw btn-sm nav-cta" href="{% url 'portfolio:contact' %}">{% sitetext 'common.get_in_touch' %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
           </ul>
         </div>
       </div>
@@ -70,33 +70,33 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ profile.name|default:'Home' }}">
+          <a class="brand" href="{% url 'portfolio:home' %}" aria-label="{{ brand_name }}">
             <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle class="f-sun" cx="24" cy="24" r="21" stroke="#17130e" stroke-width="3"/><path d="M9 29c5-10 9 6 14-3s8 5 15-4" fill="none" stroke="#17130e" stroke-width="3.4" stroke-linecap="round"/><circle class="f-tom" cx="34.5" cy="14.5" r="4.5" stroke="#17130e" stroke-width="2.4"/></svg>
-            <span><span class="brand-name">{{ profile.name|default:"Portfolio" }}</span><span class="brand-sub">{{ profile.role|default:"" }}</span></span>
+            <span><span class="brand-name">{{ brand_name }}</span><span class="brand-sub">{{ profile.role|default:"" }}</span></span>
           </a>
           <p>{{ profile.bio|default:""|truncatewords:28 }}</p>
         </div>
         <div>
-          <h2>Explore</h2>
+          <h2>{% sitetext 'layout.explore' %}</h2>
           <ul class="footer-links">
-            <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-            <li><a href="{% url 'portfolio:about' %}">About</a></li>
-            <li><a href="{% url 'portfolio:work_list' %}">Work</a></li>
-            <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
-            <li><a href="{% url 'portfolio:gallery' %}">Gallery</a></li>
+            <li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li>
+            <li><a href="{% url 'portfolio:about' %}">{% sitetext 'common.about' %}</a></li>
+            <li><a href="{% url 'portfolio:work_list' %}">{% sitetext 'common.work' %}</a></li>
+            <li><a href="{% url 'portfolio:blog_list' %}">{% sitetext 'common.blog' %}</a></li>
+            <li><a href="{% url 'portfolio:gallery' %}">{% sitetext 'common.gallery' %}</a></li>
           </ul>
         </div>
         <div>
-          <h2>Say hello</h2>
+          <h2>{% sitetext 'layout.say_hello' %}</h2>
           <ul class="footer-links">
             {% if profile.email %}<li><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>{% endif %}
             {% if profile.phone %}<li><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}
             {% if profile.location %}<li>{{ profile.location }}</li>{% endif %}
-            <li><a href="{% url 'portfolio:contact' %}">Contact form</a></li>
+            <li><a href="{% url 'portfolio:contact' %}">{% sitetext 'layout.contact_form' %}</a></li>
           </ul>
         </div>
         <div class="footer-news">
-          <h2>Elsewhere</h2>
+          <h2>{% sitetext 'layout.elsewhere' %}</h2>
           {% if profile.social_links.all %}
             <ul class="footer-links">
               {% for link in profile.social_links.all %}
@@ -104,13 +104,13 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p>No social links added yet.</p>
+            <p>{% sitetext 'layout.no_social_links_added_yet' %}</p>
           {% endif %}
         </div>
       </div>
-      <p class="footer-mega" aria-hidden="true">{{ profile.name|default:"Portfolio" }}<span>*</span></p>
+      <p class="footer-mega" aria-hidden="true">{{ brand_name }}<span>*</span></p>
       <div class="footer-bottom">
-        <span>&copy; <span data-year>{% now "Y" %}</span> {{ profile.name|default:"Portfolio" }}. All rights reserved.</span>
+        <span>&copy; <span data-year>{% now "Y" %}</span> {% sitetext 'layout.rights' name=brand_name %}</span>
       </div>
     </div>
   </footer>

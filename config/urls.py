@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,7 +19,13 @@ urlpatterns = [
     path('', include('portfolio.urls')),
 ]
 
-# Serve user-uploaded media (and static, in DEBUG) locally.
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+# Uploaded media (project covers, post covers, avatar...). Served by Django so a
+# file uploaded from the admin is visible immediately, with no app restart.
+# (Fine for a portfolio-sized site; for heavy traffic let Apache/nginx serve it.)
+urlpatterns += [
+    re_path(
+        r"^%s(?P<path>.*)$" % settings.MEDIA_URL.lstrip("/"),
+        serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
+]

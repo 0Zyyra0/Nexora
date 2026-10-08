@@ -9,7 +9,7 @@
     var showing = input.type === 'text';
     input.type = showing ? 'password' : 'text';
     btn.setAttribute('aria-pressed', String(!showing));
-    btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    btn.setAttribute('aria-label', showing ? btn.dataset.showLabel : btn.dataset.hideLabel);
   }
 
   document.addEventListener('DOMContentLoaded', function () {

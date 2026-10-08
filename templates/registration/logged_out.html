@@ -1,21 +1,21 @@
-{% load static %}
+{% load static sitetext %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Logged out &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <title>{% sitetext 'account.title_logged_out' name=brand_name %}</title>
   <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
 </head>
 <body class="nb">
   <div class="nb-wrap">
     <div class="nb-box" style="text-align:center;">
-      <span class="nb-tag">See you soon</span>
-      <h1>Logged out.</h1>
-      <p class="nb-sub">You've been signed out of your account.</p>
-      <a class="nb-btn" style="display:block;text-decoration:none;text-align:center;" href="{% url 'login' %}">Log back in &rarr;</a>
+      <span class="nb-tag">{% sitetext 'account.see_you_soon' %}</span>
+      <h1>{% sitetext 'account.logged_out' %}</h1>
+      <p class="nb-sub">{% sitetext 'account.you_ve_been_signed_out' %}</p>
+      <a class="nb-btn" style="display:block;text-decoration:none;text-align:center;" href="{% url 'login' %}">{% sitetext 'account.log_back_in' %}</a>
       <div class="nb-links">
-        <a href="{% url 'portfolio:home' %}">Back to site</a>
+        <a href="{% url 'portfolio:home' %}">{% sitetext 'common.back_to_site' %}</a>
         <span></span>
       </div>
     </div>

@@ -1,10 +1,10 @@
-{% load static %}
+{% load static sitetext %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My account &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <title>{% sitetext 'account.title_my_account' name=brand_name %}</title>
   <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
 </head>
 <body class="nb nb-dash">
@@ -12,14 +12,14 @@
     <div class="nb-box">
       <div class="nb-dash-head">
         <div>
-          <span class="nb-tag">Signed in as {{ user.email|default:user.username }}</span>
-          <h1>My account.</h1>
+          <span class="nb-tag">{% sitetext 'account.signed_in_as' %} {{ user.email|default:user.username }}</span>
+          <h1>{% sitetext 'account.my_account' %}</h1>
         </div>
         <div style="display:flex; gap:10px;">
-          <a class="nb-btn-small" href="{% url 'portfolio:home' %}">Back to site</a>
+          <a class="nb-btn-small" href="{% url 'portfolio:home' %}">{% sitetext 'common.back_to_site' %}</a>
           <form method="post" action="{% url 'logout' %}" style="margin:0;">
             {% csrf_token %}
-            <button class="nb-btn-small" type="submit" style="border:3px solid var(--nb-ink);">Log out</button>
+            <button class="nb-btn-small" type="submit" style="border:3px solid var(--nb-ink);">{% sitetext 'account.log_out' %}</button>
           </form>
         </div>
       </div>
@@ -31,7 +31,7 @@
       {% endif %}
 
       <div class="nb-section">
-        <h2>🔖 Saved articles</h2>
+        <h2>{% sitetext 'account.saved_articles' %}</h2>
         {% if bookmarks %}
           <ul class="nb-list">
             {% for bookmark in bookmarks %}
@@ -39,18 +39,18 @@
                 <a class="nb-list-title" href="{{ bookmark.post.get_absolute_url }}">{{ bookmark.post.title }}</a>
                 <form method="post" action="{% url 'portfolio:bookmark_toggle' bookmark.post.slug %}" style="margin:0;">
                   {% csrf_token %}
-                  <button class="nb-btn-small" type="submit">Remove</button>
+                  <button class="nb-btn-small" type="submit">{% sitetext 'account.remove' %}</button>
                 </form>
               </li>
             {% endfor %}
           </ul>
         {% else %}
-          <p class="nb-empty">Nothing saved yet — look for the 🔖 Save button on any post.</p>
+          <p class="nb-empty">{% sitetext 'account.nothing_saved_yet_look_for' %}</p>
         {% endif %}
       </div>
 
       <div class="nb-section">
-        <h2>♡ Liked articles</h2>
+        <h2>{% sitetext 'account.liked_articles' %}</h2>
         {% if liked_posts %}
           <ul class="nb-list">
             {% for post in liked_posts %}
@@ -60,12 +60,12 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="nb-empty">No likes yet — hit ♡ on a post you enjoy.</p>
+          <p class="nb-empty">{% sitetext 'account.no_likes_yet_hit_on' %}</p>
         {% endif %}
       </div>
 
       <div class="nb-section">
-        <h2>💬 My comments</h2>
+        <h2>{% sitetext 'account.my_comments' %}</h2>
         {% if my_comments %}
           <ul class="nb-list">
             {% for comment in my_comments %}
@@ -79,17 +79,17 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="nb-empty">You haven't commented on anything yet.</p>
+          <p class="nb-empty">{% sitetext 'account.you_haven_t_commented_on' %}</p>
         {% endif %}
       </div>
 
       <div class="nb-section">
-        <h2>Account details</h2>
+        <h2>{% sitetext 'account.account_details' %}</h2>
         <form method="post" action="{% url 'portfolio:profile_edit' %}" style="max-width:420px;">
           {% csrf_token %}
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ profile_form.first_name.id_for_label }}">First name</label>
+            <label class="nb-label" for="{{ profile_form.first_name.id_for_label }}">{% sitetext 'account.first_name' %}</label>
             <div class="nb-input-wrap">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-5.5 7.5-5.5s6 1.5 7.5 5.5"/></svg>
               {{ profile_form.first_name }}
@@ -98,7 +98,7 @@
           </div>
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ profile_form.last_name.id_for_label }}">Last name</label>
+            <label class="nb-label" for="{{ profile_form.last_name.id_for_label }}">{% sitetext 'account.last_name' %}</label>
             <div class="nb-input-wrap">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-5.5 7.5-5.5s6 1.5 7.5 5.5"/></svg>
               {{ profile_form.last_name }}
@@ -107,7 +107,7 @@
           </div>
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ profile_form.email.id_for_label }}">Email</label>
+            <label class="nb-label" for="{{ profile_form.email.id_for_label }}">{% sitetext 'common.email' %}</label>
             <div class="nb-input-wrap">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
               {{ profile_form.email }}
@@ -115,21 +115,21 @@
             {% if profile_form.email.errors %}<p class="nb-field-error">{{ profile_form.email.errors.0 }}</p>{% endif %}
           </div>
 
-          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Save details</button>
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">{% sitetext 'account.save_details' %}</button>
         </form>
       </div>
 
       <div class="nb-section">
-        <h2>Change password</h2>
+        <h2>{% sitetext 'account.change_password' %}</h2>
         <form method="post" action="{% url 'portfolio:profile_password_change' %}" style="max-width:420px;">
           {% csrf_token %}
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ password_form.old_password.id_for_label }}">Current password</label>
+            <label class="nb-label" for="{{ password_form.old_password.id_for_label }}">{% sitetext 'account.current_password' %}</label>
             <div class="nb-input-wrap has-toggle">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               {{ password_form.old_password }}
-              <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+              <button type="button" class="nb-pw-toggle" aria-label="{% sitetext 'common.show_password' %}" aria-pressed="false" data-show-label="{% sitetext 'common.show_password' %}" data-hide-label="{% sitetext 'common.hide_password' %}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
@@ -137,11 +137,11 @@
           </div>
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ password_form.new_password1.id_for_label }}">New password</label>
+            <label class="nb-label" for="{{ password_form.new_password1.id_for_label }}">{% sitetext 'common.new_password' %}</label>
             <div class="nb-input-wrap has-toggle">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               {{ password_form.new_password1 }}
-              <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+              <button type="button" class="nb-pw-toggle" aria-label="{% sitetext 'common.show_password' %}" aria-pressed="false" data-show-label="{% sitetext 'common.show_password' %}" data-hide-label="{% sitetext 'common.hide_password' %}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
@@ -149,31 +149,31 @@
           </div>
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ password_form.new_password2.id_for_label }}">Confirm new password</label>
+            <label class="nb-label" for="{{ password_form.new_password2.id_for_label }}">{% sitetext 'common.confirm_new_password' %}</label>
             <div class="nb-input-wrap has-toggle">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               {{ password_form.new_password2 }}
-              <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+              <button type="button" class="nb-pw-toggle" aria-label="{% sitetext 'common.show_password' %}" aria-pressed="false" data-show-label="{% sitetext 'common.show_password' %}" data-hide-label="{% sitetext 'common.hide_password' %}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
             {% if password_form.new_password2.errors %}<p class="nb-field-error">{{ password_form.new_password2.errors.0 }}</p>{% endif %}
           </div>
 
-          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Update password</button>
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">{% sitetext 'account.update_password' %}</button>
         </form>
       </div>
 
       <div class="nb-section">
-        <h2>Security question</h2>
+        <h2>{% sitetext 'common.security_question' %}</h2>
         <p class="nb-note" style="margin-top:0;">
-          {% if has_security_question %}Used to recover your account without email.{% else %}You don't have one set yet — add one so you can recover your account later.{% endif %}
+          {% if has_security_question %}{% sitetext 'account.used_to_recover_your_account' %}{% else %}{% sitetext 'account.you_don_t_have_one' %}{% endif %}
         </p>
         <form method="post" action="{% url 'portfolio:profile_security_edit' %}" style="max-width:420px;">
           {% csrf_token %}
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ security_form.question.id_for_label }}">Security question</label>
+            <label class="nb-label" for="{{ security_form.question.id_for_label }}">{% sitetext 'common.security_question' %}</label>
             <div class="nb-input-wrap">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7v.3"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
               {{ security_form.question }}
@@ -182,7 +182,7 @@
           </div>
 
           <div class="nb-field">
-            <label class="nb-label" for="{{ security_form.new_answer.id_for_label }}">{% if has_security_question %}New answer{% else %}Answer{% endif %}</label>
+            <label class="nb-label" for="{{ security_form.new_answer.id_for_label }}">{% if has_security_question %}{% sitetext 'account.new_answer' %}{% else %}{% sitetext 'common.answer' %}{% endif %}</label>
             <div class="nb-input-wrap">
               <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
               {{ security_form.new_answer }}
@@ -190,7 +190,7 @@
             {% if security_form.new_answer.errors %}<p class="nb-field-error">{{ security_form.new_answer.errors.0 }}</p>{% endif %}
           </div>
 
-          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">Save security question</button>
+          <button class="nb-btn" type="submit" style="width:auto; padding:10px 20px;">{% sitetext 'account.save_security_question' %}</button>
         </form>
       </div>
 

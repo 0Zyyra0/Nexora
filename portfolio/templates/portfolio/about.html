@@ -1,21 +1,21 @@
 {% extends 'portfolio/base.html' %}
-{% load static %}
+{% load static sitetext %}
 
-{% block title %}About &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{% sitetext 'about.title' name=brand_name %}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">About</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li aria-current="page">{% sitetext 'common.about' %}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">About<span class="text-tomato">.</span></h1>
+          <h1 id="page-title">{% sitetext 'common.about' %}<span class="text-tomato">.</span></h1>
           <p class="lead-text">{{ profile.role|default:"" }}</p>
         </div>
         {% if profile.resume %}
           <div class="page-hero-card">
-            <a class="btn-lw" href="{{ profile.resume.url }}" download>Download resume <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v11M7 12l5 5 5-5M5 20h14"/></svg></a>
+            <a class="btn-lw" href="{{ profile.resume.url }}" download>{% sitetext 'about.download_resume' %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v11M7 12l5 5 5-5M5 20h14"/></svg></a>
           </div>
         {% endif %}
       </div>
@@ -26,14 +26,14 @@
     <div class="container">
       <div class="about-grid">
         <div class="reveal">
-          <h2 class="visually-hidden" id="about-title">Bio</h2>
+          <h2 class="visually-hidden" id="about-title">{% sitetext 'about.bio' %}</h2>
           <div class="about-portrait">
             {% if profile.avatar %}
               <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}">
             {% endif %}
             <div><strong>{{ profile.name|default:"" }}</strong><span>{{ profile.role|default:"" }}</span></div>
           </div>
-          <div class="prose">{{ profile.bio|default:"No bio has been added yet — add one from the Django admin panel (Profile)."|linebreaks }}</div>
+          <div class="prose">{% sitetext 'about.no_bio' as t_no_bio %}{{ profile.bio|default:t_no_bio|linebreaks }}</div>
           <div class="about-facts">
             {% if profile.location %}<span class="chip">{{ profile.location }}</span>{% endif %}
             {% if profile.email %}<span class="chip chip-sun"><a href="mailto:{{ profile.email }}" style="color:inherit">{{ profile.email }}</a></span>{% endif %}
@@ -50,7 +50,7 @@
 
         {% if skills %}
           <div class="reveal d1">
-            <p class="eyebrow"><span class="num">01</span> Skills</p>
+            <p class="eyebrow"><span class="num">01</span> {% sitetext 'about.skills' %}</p>
             {% for skill in skills %}
               <div class="skill-row">
                 <div class="skill-top"><span>{{ skill.name }}</span><span>{{ skill.percent }}%</span></div>
@@ -68,8 +68,8 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <p class="eyebrow"><span class="num">02</span> Experience</p>
-          <h2 class="section-title" id="experience-title">Where I've worked</h2>
+          <p class="eyebrow"><span class="num">02</span> {% sitetext 'about.experience' %}</p>
+          <h2 class="section-title" id="experience-title">{% sitetext 'about.where_i_ve_worked' %}</h2>
         </div>
       </div>
       <ol class="process-steps">
@@ -78,7 +78,7 @@
             <h3><span class="step-no">{{ forloop.counter }}</span> {{ exp.title }}</h3>
             <p><strong>{{ exp.organization }}</strong>{% if exp.location %} &middot; {{ exp.location }}{% endif %}</p>
             <p>{{ exp.description }}</p>
-            <span class="chip">{{ exp.start_date|date:"M Y" }} &ndash; {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}</span>
+            <span class="chip">{{ exp.start_date|date:"M Y" }} &ndash; {% if exp.is_current %}{% sitetext 'about.present' %}{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}</span>
           </li>
         {% endfor %}
       </ol>

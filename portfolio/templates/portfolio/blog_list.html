@@ -1,24 +1,24 @@
 {% extends 'portfolio/base.html' %}
-{% load static portfolio_extras %}
+{% load static portfolio_extras sitetext %}
 
-{% block title %}Blog &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{% sitetext 'blog_list.title' name=brand_name %}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Blog</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li aria-current="page">{% sitetext 'common.blog' %}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Blog<span class="text-tomato">.</span></h1>
-          <p class="lead-text">Writing on things I'm working on.</p>
+          <h1 id="page-title">{% sitetext 'common.blog' %}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{% sitetext 'blog_list.writing_on_things_i_m' %}</p>
         </div>
         <div class="page-hero-card">
           <form method="get" role="search">
-            <label class="form-label visually-hidden" for="keyword">Search posts</label>
+            <label class="form-label visually-hidden" for="keyword">{% sitetext 'blog_list.search_label' %}</label>
             <div style="display:flex; gap:.5rem;">
-              <input class="form-control" type="search" id="keyword" name="keyword" value="{{ keyword }}" placeholder="Search posts&hellip;">
-              <button class="btn-lw btn-sm" type="submit">Go</button>
+              <input class="form-control" type="search" id="keyword" name="keyword" value="{{ keyword }}" placeholder="{% sitetext 'blog_list.search_placeholder' %}">
+              <button class="btn-lw btn-sm" type="submit">{% sitetext 'blog_list.go' %}</button>
             </div>
           </form>
         </div>
@@ -28,17 +28,17 @@
 
   <section class="section pt-0" id="posts" aria-labelledby="grid-title">
     <div class="container">
-      <h2 class="visually-hidden" id="grid-title">All posts</h2>
+      <h2 class="visually-hidden" id="grid-title">{% sitetext 'common.all_posts' %}</h2>
 
-      <ul class="filters" aria-label="Filter posts by category">
-        <li><a class="filter-btn" aria-pressed="{% if not active_category %}true{% else %}false{% endif %}" href="{% url 'portfolio:blog_list' %}{% if keyword %}?keyword={{ keyword }}{% endif %}">All</a></li>
+      <ul class="filters" aria-label="{% sitetext 'blog_list.filter_posts_by_category' %}">
+        <li><a class="filter-btn" aria-pressed="{% if not active_category %}true{% else %}false{% endif %}" href="{% url 'portfolio:blog_list' %}{% if keyword %}?keyword={{ keyword }}{% endif %}">{% sitetext 'blog_list.all' %}</a></li>
         {% for value, label in categories %}
           <li><a class="filter-btn" aria-pressed="{% if active_category == value %}true{% else %}false{% endif %}" href="?category={{ value }}{% if keyword %}&keyword={{ keyword }}{% endif %}">{{ label }}</a></li>
         {% endfor %}
       </ul>
 
       {% if keyword %}
-        <p class="filter-status">Search results for &ldquo;{{ keyword }}&rdquo; &mdash; {{ page_obj.paginator.count }} post{{ page_obj.paginator.count|pluralize }} found.</p>
+        <p class="filter-status">{% sitetext 'blog_list.search_results' keyword=keyword count=page_obj.paginator.count %}</p>
       {% endif %}
 
       <ul class="project-grid">
@@ -62,12 +62,12 @@
             </a>
           </li>
         {% empty %}
-          <li><p>No posts found &mdash; try a different search, or add posts from the Django admin panel.</p></li>
+          <li><p>{% sitetext 'blog_list.no_posts_found_try_a' %}</p></li>
         {% endfor %}
       </ul>
 
       {% if page_obj.paginator.num_pages > 1 %}
-        <ul class="lw-pagination" aria-label="Pagination">
+        <ul class="lw-pagination" aria-label="{% sitetext 'common.pagination' %}">
           {% if page_obj.has_previous %}
             <li><a href="?page={{ page_obj.previous_page_number }}{% if keyword %}&keyword={{ keyword }}{% endif %}{% if active_category %}&category={{ active_category }}{% endif %}">&larr;</a></li>
           {% else %}

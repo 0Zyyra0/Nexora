@@ -1,38 +1,38 @@
-{% load static %}
+{% load static sitetext %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log in &mdash; {{ profile.name|default:"Portfolio" }}</title>
+  <title>{% sitetext 'account.title_log_in' name=brand_name %}</title>
   <link rel="stylesheet" href="{% static 'portfolio/accounts/nb.css' %}">
 </head>
 <body class="nb">
   <div class="nb-wrap">
     <form class="nb-box" method="post" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
       {% csrf_token %}
-      <span class="nb-tag">Members only</span>
-      <h1>Log in.</h1>
-      <p class="nb-sub">No fluff. Just your inbox and your work.</p>
+      <span class="nb-tag">{% sitetext 'account.members_only' %}</span>
+      <h1>{% sitetext 'account.log_in' %}</h1>
+      <p class="nb-sub">{% sitetext 'account.no_fluff_just_your_inbox' %}</p>
 
       {% if form.non_field_errors %}
         <div class="nb-error">{{ form.non_field_errors.0 }}</div>
       {% endif %}
 
       <div class="nb-field">
-        <label class="nb-label" for="nb-email">Email</label>
+        <label class="nb-label" for="nb-email">{% sitetext 'common.email' %}</label>
         <div class="nb-input-wrap">
           <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
-          <input class="nb-input" type="email" id="nb-email" name="username" placeholder="you@example.com" autocomplete="username" required autofocus>
+          <input class="nb-input" type="email" id="nb-email" name="username" placeholder="{% sitetext 'common.email_placeholder' %}" autocomplete="username" required autofocus>
         </div>
       </div>
 
       <div class="nb-field">
-        <label class="nb-label" for="nb-password">Password</label>
+        <label class="nb-label" for="nb-password">{% sitetext 'common.password' %}</label>
         <div class="nb-input-wrap has-toggle">
           <svg class="nb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-          <input class="nb-input" type="password" id="nb-password" name="password" placeholder="Top secret" autocomplete="current-password" required>
-          <button type="button" class="nb-pw-toggle" aria-label="Show password" aria-pressed="false">
+          <input class="nb-input" type="password" id="nb-password" name="password" placeholder="{% sitetext 'common.password_placeholder' %}" autocomplete="current-password" required>
+          <button type="button" class="nb-pw-toggle" aria-label="{% sitetext 'common.show_password' %}" aria-pressed="false" data-show-label="{% sitetext 'common.show_password' %}" data-hide-label="{% sitetext 'common.hide_password' %}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
@@ -40,10 +40,10 @@
 
       <input type="hidden" name="next" value="{{ request.GET.next }}">
 
-      <button class="nb-btn" type="submit">Let me in <span aria-hidden="true">&rarr;</span></button>
+      <button class="nb-btn" type="submit">{% sitetext 'account.let_me_in' %} <span aria-hidden="true">&rarr;</span></button>
       <div class="nb-links">
-        <a href="{% url 'portfolio:recover_step1' %}">Lost password</a>
-        <a href="{% url 'portfolio:register' %}">Join instead</a>
+        <a href="{% url 'portfolio:recover_step1' %}">{% sitetext 'account.lost_password' %}</a>
+        <a href="{% url 'portfolio:register' %}">{% sitetext 'common.join_instead' %}</a>
       </div>
     </form>
   </div>

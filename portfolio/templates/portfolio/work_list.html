@@ -1,21 +1,21 @@
 {% extends 'portfolio/base.html' %}
-{% load static %}
+{% load static sitetext %}
 
-{% block title %}Work &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{% sitetext 'work_list.title' name=brand_name %}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Work</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li aria-current="page">{% sitetext 'common.work' %}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Work<span class="text-tomato">.</span></h1>
-          <p class="lead-text">Case studies and projects, open any one for the full write-up.</p>
+          <h1 id="page-title">{% sitetext 'common.work' %}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{% sitetext 'work_list.case_studies_and_projects_open' %}</p>
         </div>
         <div class="page-hero-card">
           <dl>
-            <div><dt>Projects</dt><dd>{{ page_obj.paginator.count }}</dd></div>
+            <div><dt>{% sitetext 'work_list.projects' %}</dt><dd>{{ page_obj.paginator.count }}</dd></div>
           </dl>
         </div>
       </div>
@@ -24,10 +24,10 @@
 
   <section class="section pt-0" id="work" aria-labelledby="grid-title">
     <div class="container">
-      <h2 class="visually-hidden" id="grid-title">All projects</h2>
+      <h2 class="visually-hidden" id="grid-title">{% sitetext 'common.all_projects' %}</h2>
 
       {% if active_tag %}
-        <p class="filter-status">Filtered by tag &mdash; <a class="link-arrow" href="{% url 'portfolio:work_list' %}">clear filter</a></p>
+        <p class="filter-status">{% sitetext 'work_list.filtered_by_tag' %} <a class="link-arrow" href="{% url 'portfolio:work_list' %}">{% sitetext 'work_list.clear_filter' %}</a></p>
       {% endif %}
 
       <ul class="project-grid">
@@ -44,7 +44,7 @@
               <div class="work-meta">
                 <div>
                   {% if project.client %}<span class="chip chip-sun">{{ project.client }}</span>{% endif %}
-                  {% if project.featured %}<span class="chip chip-tom">Featured</span>{% endif %}
+                  {% if project.featured %}<span class="chip chip-tom">{% sitetext 'work_list.featured' %}</span>{% endif %}
                   <h3>{{ project.title }}</h3>
                   <p>{{ project.short_description|default:project.content|truncatewords:16 }}</p>
                 </div>
@@ -53,12 +53,12 @@
             </a>
           </li>
         {% empty %}
-          <li><p>No projects yet &mdash; add some from the Django admin panel.</p></li>
+          <li><p>{% sitetext 'work_list.no_projects_yet_add_some' %}</p></li>
         {% endfor %}
       </ul>
 
       {% if page_obj.paginator.num_pages > 1 %}
-        <ul class="lw-pagination" aria-label="Pagination">
+        <ul class="lw-pagination" aria-label="{% sitetext 'common.pagination' %}">
           {% if page_obj.has_previous %}
             <li><a href="?page={{ page_obj.previous_page_number }}">&larr;</a></li>
           {% else %}

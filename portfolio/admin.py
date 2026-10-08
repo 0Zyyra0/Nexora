@@ -12,6 +12,7 @@ from .models import (
     Project,
     ProjectImage,
     SecurityCredential,
+    SiteText,
     Skill,
     SocialLink,
     Tag,
@@ -134,3 +135,30 @@ class SecurityCredentialAdmin(admin.ModelAdmin):
     list_display = ('user', 'question')
     search_fields = ('user__email', 'user__username', 'question')
     readonly_fields = ('user', 'question', 'answer_hash')
+
+
+@admin.register(SiteText)
+class SiteTextAdmin(admin.ModelAdmin):
+    """Every visible piece of site copy. Edit the value; keys are fixed."""
+    list_display = ('key', 'preview', 'group', 'updated_at')
+    list_filter = ('group',)
+    search_fields = ('key', 'value')
+    list_per_page = 300  # every text on one page; use the group filter or search to narrow down
+    readonly_fields = ('key', 'group', 'updated_at')
+    fields = ('key', 'group', 'value', 'updated_at')
+
+    @admin.display(description='Text')
+    def preview(self, obj):
+        return (obj.value[:90] + '...') if len(obj.value) > 90 else obj.value
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        from .site_texts import ensure_defaults
+
+        ensure_defaults()  # rows for any new built-in text show up right away
+        return super().changelist_view(request, extra_context)

@@ -19,6 +19,7 @@ from .forms import (
     RegisterForm,
     SecurityQuestionEditForm,
 )
+from .site_texts import get_text
 from .models import (
     Bookmark,
     Comment,
@@ -230,11 +231,10 @@ def comment_create(request, slug):
 
         messages.success(
             request,
-            'Your comment has been submitted and is awaiting admin approval. '
-            "It won't be visible publicly until it's approved.",
+            get_text('msg.comment_submitted'),
         )
     else:
-        messages.error(request, 'Please fix the errors in your comment and try again.')
+        messages.error(request, get_text('msg.comment_invalid'))
 
     return redirect(post.get_absolute_url() + '#comments')
 
@@ -251,10 +251,10 @@ def comment_delete(request, comment_id):
         if comment.id in mine:
             mine.remove(comment.id)
             request.session['my_comment_ids'] = mine
-        messages.success(request, 'Your comment was deleted.')
+        messages.success(request, get_text('msg.comment_deleted'))
         return redirect(post.get_absolute_url() + '#comments')
 
-    messages.error(request, "You can only delete your own comments.")
+    messages.error(request, get_text('msg.comment_forbidden'))
     return redirect(comment.post.get_absolute_url() + '#comments')
 
 
@@ -294,11 +294,11 @@ def bookmark_toggle(request, slug):
     if existing:
         existing.delete()
         saved = False
-        messages.success(request, 'Removed from your saved articles.')
+        messages.success(request, get_text('msg.bookmark_removed'))
     else:
         Bookmark.objects.create(user=request.user, post=post)
         saved = True
-        messages.success(request, 'Saved to your profile.')
+        messages.success(request, get_text('msg.bookmark_saved'))
 
     if _is_ajax(request):
         return JsonResponse({'saved': saved})
@@ -319,7 +319,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user, backend='portfolio.auth_backends.EmailBackend')
-            messages.success(request, f'Welcome, {user.email}!')
+            messages.success(request, get_text('msg.welcome', email=user.email))
             return redirect('portfolio:profile_dashboard')
     else:
         form = RegisterForm()
@@ -381,10 +381,10 @@ def profile_edit(request):
     form = ProfileEditForm(request.POST, instance=request.user)
     if form.is_valid():
         form.save()
-        messages.success(request, 'Your profile was updated.')
+        messages.success(request, get_text('msg.profile_updated'))
         return redirect('portfolio:profile_dashboard')
 
-    messages.error(request, 'Please fix the errors below and try again.')
+    messages.error(request, get_text('msg.fix_errors'))
     context = _profile_dashboard_context(request, profile_form=form)
     return render(request, 'registration/profile_dashboard.html', context)
 
@@ -396,10 +396,10 @@ def profile_password_change(request):
     if form.is_valid():
         user = form.save()
         update_session_auth_hash(request, user)  # keep the user logged in
-        messages.success(request, 'Your password was changed.')
+        messages.success(request, get_text('msg.password_changed'))
         return redirect('portfolio:profile_dashboard')
 
-    messages.error(request, 'Please fix the errors below and try again.')
+    messages.error(request, get_text('msg.fix_errors'))
     context = _profile_dashboard_context(request, password_form=form)
     return render(request, 'registration/profile_dashboard.html', context)
 
@@ -413,10 +413,10 @@ def profile_security_edit(request):
     form = SecurityQuestionEditForm(request.POST, instance=security)
     if form.is_valid():
         form.save()
-        messages.success(request, 'Your security question was updated.')
+        messages.success(request, get_text('msg.security_updated'))
         return redirect('portfolio:profile_dashboard')
 
-    messages.error(request, 'Please fix the errors below and try again.')
+    messages.error(request, get_text('msg.fix_errors'))
     context = _profile_dashboard_context(request, security_form=form)
     return render(request, 'registration/profile_dashboard.html', context)
 
@@ -439,7 +439,7 @@ def recover_step1(request):
                 request.session['recovery_user_id'] = user.id
                 request.session.pop('recovery_verified', None)
                 return redirect('portfolio:recover_step2')
-            messages.error(request, "We couldn't find a security question for that email.")
+            messages.error(request, get_text('msg.recover_not_found'))
     else:
         form = RecoverIdentifyForm()
 
@@ -458,7 +458,7 @@ def recover_step2(request):
             if security.check_answer(form.cleaned_data['answer']):
                 request.session['recovery_verified'] = True
                 return redirect('portfolio:recover_step3')
-            messages.error(request, "That answer doesn't match — try again.")
+            messages.error(request, get_text('msg.recover_wrong_answer'))
     else:
         form = RecoverAnswerForm()
 
@@ -477,7 +477,7 @@ def recover_step3(request):
             form.save()
             del request.session['recovery_user_id']
             del request.session['recovery_verified']
-            messages.success(request, 'Your password was reset — you can log in now.')
+            messages.success(request, get_text('msg.password_reset_done'))
             return redirect('login')
     else:
         form = SetPasswordForm(user=user)
@@ -502,12 +502,9 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(
-                request,
-                "Thanks! Your message has been sent — I'll get back to you soon.",
-            )
+            messages.success(request, get_text('msg.contact_sent'))
             return redirect('portfolio:contact')
-        messages.error(request, 'Please correct the errors below and try again.')
+        messages.error(request, get_text('msg.contact_invalid'))
     else:
         form = ContactForm()
 

@@ -1,13 +1,13 @@
 {% extends 'portfolio/base.html' %}
-{% load static %}
+{% load static sitetext %}
 
-{% block title %}{{ project.title }} &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{{ project.title }} &mdash; {{ brand_name }}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li><a href="{% url 'portfolio:work_list' %}">Work</a></li><li aria-current="page">{{ project.title }}</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li><a href="{% url 'portfolio:work_list' %}">{% sitetext 'common.work' %}</a></li><li aria-current="page">{{ project.title }}</li></ol>
       <div class="page-hero-grid">
         <div>
           <h1 id="page-title">{{ project.title }}</h1>
@@ -21,8 +21,8 @@
         {% if project.client or project.project_url %}
           <div class="page-hero-card">
             <dl>
-              {% if project.client %}<div><dt>Client</dt><dd style="font-size:1.3rem;">{{ project.client }}</dd></div>{% endif %}
-              {% if project.project_url %}<div><dt>Link</dt><dd style="font-size:1.1rem;"><a class="link-arrow" href="{{ project.project_url }}" target="_blank" rel="noopener">Visit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></dd></div>{% endif %}
+              {% if project.client %}<div><dt>{% sitetext 'work_detail.client' %}</dt><dd style="font-size:1.3rem;">{{ project.client }}</dd></div>{% endif %}
+              {% if project.project_url %}<div><dt>{% sitetext 'work_detail.link' %}</dt><dd style="font-size:1.1rem;"><a class="link-arrow" href="{{ project.project_url }}" target="_blank" rel="noopener">{% sitetext 'work_detail.visit' %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></dd></div>{% endif %}
             </dl>
           </div>
         {% endif %}
@@ -62,7 +62,7 @@
   <section class="section pt-0">
     <div class="container">
       <div class="section-head">
-        <div><p class="eyebrow"><span class="num">&bull;</span> More</p><h2 class="section-title">Related projects</h2></div>
+        <div><p class="eyebrow"><span class="num">&bull;</span> {% sitetext 'common.more' %}</p><h2 class="section-title">{% sitetext 'work_detail.related_projects' %}</h2></div>
       </div>
       <ul class="project-grid">
         {% for rp in related_projects %}

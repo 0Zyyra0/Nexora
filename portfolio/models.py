@@ -347,3 +347,24 @@ class SecurityCredential(models.Model):
 
     def check_answer(self, raw_answer):
         return check_password(raw_answer.strip().lower(), self.answer_hash)
+
+
+# ---------------------------------------------------------------------------
+# Editable site copy. Every piece of visible text in the templates is looked up
+# by key from this table (see portfolio/site_texts.py for the built-in
+# defaults and templatetags/sitetext.py for the template tag), so it can be
+# changed from the Django admin without touching any HTML file.
+# ---------------------------------------------------------------------------
+class SiteText(models.Model):
+    key = models.CharField(max_length=120, unique=True)
+    value = models.TextField(blank=True)
+    group = models.CharField(max_length=60, blank=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['group', 'key']
+        verbose_name = 'Site text'
+        verbose_name_plural = 'Site texts'
+
+    def __str__(self):
+        return self.key

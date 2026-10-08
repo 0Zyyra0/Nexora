@@ -1,17 +1,17 @@
 {% extends 'portfolio/base.html' %}
-{% load static %}
+{% load static sitetext %}
 
-{% block title %}Gallery &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{% sitetext 'gallery.title' name=brand_name %}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li aria-current="page">Gallery</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li aria-current="page">{% sitetext 'common.gallery' %}</li></ol>
       <div class="page-hero-grid">
         <div>
-          <h1 id="page-title">Gallery<span class="text-tomato">.</span></h1>
-          <p class="lead-text">A few extra pictures.</p>
+          <h1 id="page-title">{% sitetext 'common.gallery' %}<span class="text-tomato">.</span></h1>
+          <p class="lead-text">{% sitetext 'gallery.a_few_extra_pictures' %}</p>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
             </figure>
           </li>
         {% empty %}
-          <li><p>No images yet &mdash; add some from the Django admin panel (Gallery images).</p></li>
+          <li><p>{% sitetext 'gallery.no_images_yet_add_some' %}</p></li>
         {% endfor %}
       </ul>
     </div>

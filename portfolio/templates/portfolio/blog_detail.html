@@ -1,14 +1,14 @@
 {% extends 'portfolio/base.html' %}
-{% load static portfolio_extras %}
+{% load static portfolio_extras sitetext %}
 
-{% block title %}{{ post.title }} &mdash; {{ profile.name|default:"Portfolio" }}{% endblock %}
+{% block title %}{{ post.title }} &mdash; {{ brand_name }}{% endblock %}
 {% block meta_description %}{{ post.excerpt|default:post.content|truncatewords:25 }}{% endblock %}
 
 {% block content %}
 
   <section class="page-hero" aria-labelledby="page-title">
     <div class="container">
-      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">Home</a></li><li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li><li aria-current="page">{{ post.get_category_display }}</li></ol>
+      <ol class="crumbs"><li><a href="{% url 'portfolio:home' %}">{% sitetext 'common.home' %}</a></li><li><a href="{% url 'portfolio:blog_list' %}">{% sitetext 'common.blog' %}</a></li><li aria-current="page">{{ post.get_category_display }}</li></ol>
       <div class="page-hero-grid">
         <div>
           <span class="chip {{ post.category|category_badge_class }}">{{ post.get_category_display }}</span>
@@ -38,18 +38,18 @@
       {% endif %}
 
       <div class="about-facts" style="margin-top: 1.6rem;">
-        <button type="button" id="like-btn" class="btn-lw btn-sm {% if liked %}btn-ink{% else %}btn-paper{% endif %}"
+        <button type="button" id="like-btn" class="btn-lw btn-sm {% if liked %}btn-ink{% else %}btn-paper{% endif %}" data-label-one="{% sitetext 'blog_detail.like_one' %}" data-label-many="{% sitetext 'blog_detail.like_many' %}"
                 data-url="{% url 'portfolio:like_toggle' post.slug %}">
           <span id="like-heart" class="like-heart">&hearts;</span>
-          <span id="like-count">{{ like_count }}</span> <span id="like-label">Like{{ like_count|pluralize }}</span>
+          <span id="like-count">{{ like_count }}</span> <span id="like-label">{% if like_count == 1 %}{% sitetext 'blog_detail.like_one' %}{% else %}{% sitetext 'blog_detail.like_many' %}{% endif %}</span>
         </button>
 
         {% if request.user.is_authenticated %}
-          <button type="button" id="save-btn" class="btn-lw btn-sm btn-paper" data-url="{% url 'portfolio:bookmark_toggle' post.slug %}">
-            <span id="save-label">{% if bookmarked %}&#128278; Saved{% else %}&#128278; Save{% endif %}</span>
+          <button type="button" id="save-btn" class="btn-lw btn-sm btn-paper" data-text-saved="{% sitetext 'blog_detail.saved' %}" data-text-save="{% sitetext 'blog_detail.save' %}" data-url="{% url 'portfolio:bookmark_toggle' post.slug %}">
+            <span id="save-label">{% if bookmarked %}{% sitetext 'blog_detail.saved' %}{% else %}{% sitetext 'blog_detail.save' %}{% endif %}</span>
           </button>
         {% else %}
-          <a class="btn-lw btn-sm btn-paper" href="{% url 'login' %}?next={{ request.path }}">&#128278; Save (log in)</a>
+          <a class="btn-lw btn-sm btn-paper" href="{% url 'login' %}?next={{ request.path }}">{% sitetext 'blog_detail.save_log_in' %}</a>
         {% endif %}
       </div>
     </div>
@@ -58,7 +58,7 @@
   <!-- ============================ COMMENTS ============================ -->
   <section class="section pt-0" id="comments" aria-labelledby="comments-title">
     <div class="container">
-      <h2 class="section-title" id="comments-title" style="font-size:1.6rem;">Comments ({{ comments|length }})</h2>
+      <h2 class="section-title" id="comments-title" style="font-size:1.6rem;">{% sitetext 'blog_detail.comments_heading' count=comments|length %}</h2>
 
       <ul style="list-style:none; padding:0; margin: 1.6rem 0 2.4rem;">
         {% for comment in comments %}
@@ -69,11 +69,11 @@
             </div>
             <p style="margin:.5rem 0;">{{ comment.body|linebreaksbr }}</p>
             <div style="display:flex; gap:1rem; font-size:.85rem;">
-              <a href="#" class="link-arrow" onclick="lwShowReply('{{ comment.id }}'); return false;">Reply</a>
+              <a href="#" class="link-arrow" onclick="lwShowReply('{{ comment.id }}'); return false;">{% sitetext 'blog_detail.reply' %}</a>
               {% if comment.can_delete %}
                 <form method="post" action="{% url 'portfolio:comment_delete' comment.id %}" style="margin:0;">
                   {% csrf_token %}
-                  <button type="submit" class="link-arrow" style="background:none;border:none;padding:0;cursor:pointer;color:var(--tomato);">Delete</button>
+                  <button type="submit" class="link-arrow" style="background:none;border:none;padding:0;cursor:pointer;color:var(--tomato);">{% sitetext 'blog_detail.delete' %}</button>
                 </form>
               {% endif %}
             </div>
@@ -82,10 +82,10 @@
               <form method="post" action="{% url 'portfolio:comment_create' post.slug %}">
                 {% csrf_token %}
                 <input type="hidden" name="parent" value="{{ comment.id }}">
-                <div class="field" style="margin-bottom:.8rem;"><input class="form-control" type="text" name="name" placeholder="Name" required value="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}"></div>
-                <div class="field" style="margin-bottom:.8rem;"><input class="form-control" type="email" name="email" placeholder="Email (never published)" required value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}"></div>
-                <div class="field" style="margin-bottom:.8rem;"><textarea class="form-control" name="body" rows="3" placeholder="Write a reply…" required></textarea></div>
-                <button type="submit" class="btn-lw btn-sm">Post reply</button>
+                <div class="field" style="margin-bottom:.8rem;"><input class="form-control" type="text" name="name" placeholder="{% sitetext 'common.name' %}" required value="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}"></div>
+                <div class="field" style="margin-bottom:.8rem;"><input class="form-control" type="email" name="email" placeholder="{% sitetext 'blog_detail.email_never_published' %}" required value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}"></div>
+                <div class="field" style="margin-bottom:.8rem;"><textarea class="form-control" name="body" rows="3" placeholder="{% sitetext 'blog_detail.write_a_reply' %}" required></textarea></div>
+                <button type="submit" class="btn-lw btn-sm">{% sitetext 'blog_detail.post_reply' %}</button>
               </form>
             </div>
 
@@ -101,7 +101,7 @@
                     {% if reply.can_delete %}
                       <form method="post" action="{% url 'portfolio:comment_delete' reply.id %}" style="margin:0;">
                         {% csrf_token %}
-                        <button type="submit" class="link-arrow" style="background:none;border:none;padding:0;cursor:pointer;color:var(--tomato);font-size:.85rem;">Delete</button>
+                        <button type="submit" class="link-arrow" style="background:none;border:none;padding:0;cursor:pointer;color:var(--tomato);font-size:.85rem;">{% sitetext 'blog_detail.delete' %}</button>
                       </form>
                     {% endif %}
                   </li>
@@ -110,27 +110,27 @@
             {% endif %}
           </li>
         {% empty %}
-          <li class="nb-empty" style="list-style:none;">Be the first to comment.</li>
+          <li class="nb-empty" style="list-style:none;">{% sitetext 'blog_detail.be_the_first_to_comment' %}</li>
         {% endfor %}
       </ul>
 
-      <h3 style="font-size:1.1rem; margin-bottom:1rem;">Leave a comment</h3>
+      <h3 style="font-size:1.1rem; margin-bottom:1rem;">{% sitetext 'blog_detail.leave_a_comment' %}</h3>
       <form class="form-card" method="post" action="{% url 'portfolio:comment_create' post.slug %}" style="max-width:36rem;">
         {% csrf_token %}
         <div class="field" style="margin-bottom:1rem;">
-          <label class="form-label" for="{{ comment_form.name.id_for_label }}">Name</label>
+          <label class="form-label" for="{{ comment_form.name.id_for_label }}">{% sitetext 'common.name' %}</label>
           {{ comment_form.name }}
         </div>
         <div class="field" style="margin-bottom:1rem;">
-          <label class="form-label" for="{{ comment_form.email.id_for_label }}">Email</label>
+          <label class="form-label" for="{{ comment_form.email.id_for_label }}">{% sitetext 'common.email' %}</label>
           {{ comment_form.email }}
         </div>
         <div class="field" style="margin-bottom:1rem;">
-          <label class="form-label" for="{{ comment_form.body.id_for_label }}">Comment</label>
+          <label class="form-label" for="{{ comment_form.body.id_for_label }}">{% sitetext 'blog_detail.comment' %}</label>
           {{ comment_form.body }}
         </div>
-        <button type="submit" class="btn-lw">Post comment</button>
-        <p style="font-size:.8rem; color:var(--muted); margin-top:.6rem;">Comments are shown after approval.</p>
+        <button type="submit" class="btn-lw">{% sitetext 'blog_detail.post_comment' %}</button>
+        <p style="font-size:.8rem; color:var(--muted); margin-top:.6rem;">{% sitetext 'blog_detail.comments_are_shown_after_approval' %}</p>
       </form>
     </div>
   </section>
@@ -164,7 +164,7 @@
           likeBtn.disabled = true;
           lwPost(likeBtn.getAttribute('data-url')).then(function (data) {
             document.getElementById('like-count').textContent = data.count;
-            document.getElementById('like-label').textContent = data.count === 1 ? 'Like' : 'Likes';
+            document.getElementById('like-label').textContent = data.count === 1 ? likeBtn.dataset.labelOne : likeBtn.dataset.labelMany;
             likeBtn.classList.toggle('btn-ink', data.liked);
             likeBtn.classList.toggle('btn-paper', !data.liked);
             var heart = document.getElementById('like-heart');
@@ -180,7 +180,7 @@
         saveBtn.addEventListener('click', function () {
           saveBtn.disabled = true;
           lwPost(saveBtn.getAttribute('data-url')).then(function (data) {
-            document.getElementById('save-label').textContent = data.saved ? '\u{1F516} Saved' : '\u{1F516} Save';
+            document.getElementById('save-label').textContent = data.saved ? saveBtn.dataset.textSaved : saveBtn.dataset.textSave;
           }).finally(function () { saveBtn.disabled = false; });
         });
       }
@@ -191,7 +191,7 @@
   <section class="section pt-0">
     <div class="container">
       <div class="section-head">
-        <div><p class="eyebrow"><span class="num">&bull;</span> More</p><h2 class="section-title">More in {{ post.get_category_display }}</h2></div>
+        <div><p class="eyebrow"><span class="num">&bull;</span> {% sitetext 'common.more' %}</p><h2 class="section-title">{% sitetext 'blog_detail.more_in' category=post.get_category_display %}</h2></div>
       </div>
       <ul class="project-grid">
         {% for rp in related_posts %}
